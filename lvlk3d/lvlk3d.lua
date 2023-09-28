@@ -17,6 +17,8 @@ LvLK3D.LoadFile("libs/lknoise")
 
 
 
+LvLK3D.SunDir = Vector(1, 2, 4):GetNormalized()
+
 LvLK3D.LoadFile("textures")
 LvLK3D.LoadFile("universes")
 LvLK3D.LoadFile("rendertargets")
@@ -24,6 +26,7 @@ LvLK3D.LoadFile("models")
 LvLK3D.LoadFile("basemodels")
 LvLK3D.LoadFile("objects")
 LvLK3D.LoadFile("shaders")
+LvLK3D.LoadFile("shadowvolumes")
 
 LvLK3D.LoadFile("camera")
 LvLK3D.LoadFile("render")

@@ -40,6 +40,12 @@ local function initMesh(obj)
 		local uv3 = mdlUVs[indCont[3][2]]
 		local norm3 = isSmooth and mdlSmoothNormals[indCont[3][1]] or normFlat
 
+		if (obj["NORM_INVERT"] == true) then
+			norm1 = -norm1
+			norm2 = -norm2
+			norm3 = -norm3
+		end
+
 
 		finalMesh[#finalMesh + 1] = {v1[1], v1[2], v1[3], uv1[1], uv1[2], norm1[1], norm1[2], norm1[3]}
 		finalMesh[#finalMesh + 1] = {v2[1], v2[2], v2[3], uv2[1], uv2[2], norm2[1], norm2[2], norm2[3]}

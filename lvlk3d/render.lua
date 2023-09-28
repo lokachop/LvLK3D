@@ -3,9 +3,17 @@ LvLK3D = LvLK3D or {}
 local function renderObject(obj)
     local shad = LvLK3D.CurrShader
     love.graphics.setShader(shad)
-    shad:send("mdlMatrix", obj.mat_mdl)
+    shad:send("mdlRotationMatrix", obj.mat_rot)
+    shad:send("mdlTranslationMatrix", obj.mat_transscl)
+
+    --shad:send("mdlMatrix", obj.mat_mdl)
     shad:send("viewMatrix", LvLK3D.CamMatrix_Rot * LvLK3D.CamMatrix_Trans)
     shad:send("projectionMatrix", LvLK3D.CamMatrix_Proj)
+    shad:send("sunDir", LvLK3D.SunDir)
+
+    shad:send("doShading", (obj["SHADING"] == true) and true or false)
+
+    shad:send("normInvert", (obj["NORM_INVERT"] == true) and true or false)
 
     local oCol = obj.col
     love.graphics.setColor(oCol[1], oCol[2], oCol[3])
