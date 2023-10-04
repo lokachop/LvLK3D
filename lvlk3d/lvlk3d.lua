@@ -25,6 +25,7 @@ LvLK3D.LoadFile("basemodels")
 LvLK3D.LoadFile("objects")
 LvLK3D.LoadFile("shaders")
 LvLK3D.LoadFile("shadowvolumes")
+LvLK3D.LoadFile("lights")
 
 LvLK3D.LoadFile("camera")
 LvLK3D.LoadFile("render")

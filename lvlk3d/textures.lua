@@ -214,6 +214,29 @@ function LvLK3D.SetTextureWrap(name, mode)
     LvLK3D.Textures[name]:setWrap(mode)
 end
 
+LvLK3D.NewTextureFunc("none", 2, 2, function(w, h)
+    love.graphics.setColor(0.6, 0.6, 0.6)
+    love.graphics.rectangle("fill", 0, 0, w * .5, h * .5)
+    love.graphics.rectangle("fill", w * .5, h * .5, w * .5, h * .5)
+
+    love.graphics.setColor(0.3, 0.3, 0.3)
+    love.graphics.rectangle("fill", w * .5, 0, w * .5, h * .5)
+    love.graphics.rectangle("fill", 0, h * .5, w * .5, h * .5)
+end)
+LvLK3D.SetTextureFilter("none", "nearest", "nearest")
+
+LvLK3D.NewTextureFunc("fail", 2, 2, function(w, h)
+    love.graphics.setColor(0.6, 0.3, 0.7)
+    love.graphics.rectangle("fill", 0, 0, w * .5, h * .5)
+    love.graphics.rectangle("fill", w * .5, h * .5, w * .5, h * .5)
+
+    love.graphics.setColor(0.15, 0.1, 0.2)
+    love.graphics.rectangle("fill", w * .5, 0, w * .5, h * .5)
+    love.graphics.rectangle("fill", 0, h * .5, w * .5, h * .5)
+end)
+LvLK3D.SetTextureFilter("fail", "nearest", "nearest")
+
+
 --[[
 LvLK3D.NewTexturePPM("cubemap",            "textures/cubemap_lq.ppm")
 LvLK3D.NewTexturePPM("jelly",      "textures/jelly.ppm")

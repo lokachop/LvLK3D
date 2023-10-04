@@ -20,9 +20,9 @@ local he_concat_tbl = {
 }
 local he_empty_connect = ""
 local function hashEdge(e)
-	he_concat_tbl[2] = math.floor(e[1][1] * 100) / 1000
-	he_concat_tbl[4] = math.floor(e[1][2] * 100) / 1000
-	he_concat_tbl[6] = math.floor(e[1][3] * 100) / 1000
+	he_concat_tbl[2] = math.floor(e[1][1] * 1000) / 1000
+	he_concat_tbl[4] = math.floor(e[1][2] * 1000) / 1000
+	he_concat_tbl[6] = math.floor(e[1][3] * 1000) / 1000
 
 	he_concat_tbl[8] = math.floor(e[2][1] * 1000) / 1000
 	he_concat_tbl[10] = math.floor(e[2][2] * 1000) / 1000
@@ -160,15 +160,10 @@ v3      v4
 		end
 	end
 
-
 	print("--==shadows for obj. " .. obj.name .. " ==--")
-	print("degenerates: " .. degenCount)
-	print("inverted   : " .. invertCount)
-
-
-	if cntCheck > 0 then
-		print("model is non-closed, PANIC! (" .. cntCheck .. " edges left...)")
-	end
+	print("original tris    : " .. #mdlIndices)
+	print("tri count (main) : " .. #finalMesh / 3)
+	local mainCount = #finalMesh / 3
 
 
 	obj.meshShadow = love.graphics.newMesh(vertFormat, finalMesh, "triangles")
@@ -189,7 +184,18 @@ v3      v4
 	end
 
 	obj.meshShadowCaps = love.graphics.newMesh(vertFormat, finalMesh, "triangles")
-	obj.shader = "shadowvolume"
+
+
+
+	print("tri count (caps) : " .. #finalMesh / 3)
+	print("final tri count  : " .. mainCount + (#finalMesh / 3))
+	print("degenerates      : " .. degenCount)
+	print("inverted         : " .. invertCount)
+
+
+	if cntCheck > 0 then
+		print("/!\\ model is non-closed, PANIC! (" .. cntCheck .. " edges left...) /!\\")
+	end
 end
 
 

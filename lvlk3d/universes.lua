@@ -8,6 +8,8 @@ function LvLK3D.NewUniverse(tag)
 
     local univData = {
         ["objects"] = {},
+        ["lights"] = {},
+        ["lightCount"] = 0,
         ["tag"] = tag,
         ["worldParameteri"] = {
             ["SunDir"] = Vector(0, 0, -1)
@@ -42,6 +44,10 @@ function LvLK3D.ClearUniverse(univ)
     univ = univ or LvLK3D.CurrUniv
 
     for k, v in pairs(univ["objects"]) do
+        univ[k] = nil
+    end
+
+    for k, v in pairs(univ["lights"]) do
         univ[k] = nil
     end
 end
