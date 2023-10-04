@@ -30,7 +30,7 @@ function love.load()
 	LvLK3D.SetTextureFilter("traintrack_sheet", "nearest", "nearest")
 	LvLK3D.SetTextureWrap("traintrack_sheet", "repeat")
 
-	LvLK3D.NewTextureFunc("none", 16, 16, function(w, h)
+	LvLK3D.NewTextureFunc("none", 2, 2, function(w, h)
 		love.graphics.setColor(0.6, 0.3, 0.7)
 		love.graphics.rectangle("fill", 0, 0, w * .5, h * .5)
 		love.graphics.rectangle("fill", w * .5, h * .5, w * .5, h * .5)
@@ -44,33 +44,45 @@ function love.load()
 
 
 	LvLK3D.PushUniverse(UnivTest)
-		LvLK3D.AddObjectToUniv("cube1", "cube")
-		LvLK3D.SetObjectPos("cube1", Vector(0, 0, -2))
-		LvLK3D.SetObjectMat("cube1", "none")
+		LvLK3D.AddObjectToUniv("cube1", "train")
+		LvLK3D.SetObjectPos("cube1", Vector(0, 0, 0))
+		LvLK3D.SetObjectMat("cube1", "white")
 
 		LvLK3D.SetObjectFlag("cube1", "SHADING", true)
 		LvLK3D.SetObjectFlag("cube1", "SHADING_SMOOTH", true)
 		LvLK3D.SetObjectFlag("cube1", "NORM_INVERT", false)
-		LvLK3D.UpdateObjectMesh("cube1")
+		LvLK3D.SetObjectScl("cube1", Vector(.5, .5, .5))
+		LvLK3D.SetObjectShadow("cube1", true)
+
+		LvLK3D.AddObjectToUniv("plane_floor", "plane")
+		LvLK3D.SetObjectPos("plane_floor", Vector(0, -4, 0))
+		LvLK3D.SetObjectScl("plane_floor", Vector(8, 1, 8))
+		LvLK3D.SetObjectMat("plane_floor", "mandrill")
+
+		LvLK3D.SetObjectFlag("plane_floor", "SHADING", true)
+		LvLK3D.UpdateObjectMesh("plane_floor")
 
 
 
-		LvLK3D.AddObjectToUniv("lokamodel", "lokachop_sqr")
-		LvLK3D.SetObjectPos("lokamodel", Vector(0, 0, -10))
-		LvLK3D.SetObjectMat("lokamodel", "loka_sheet")
+		LvLK3D.AddObjectToUniv("lokamodel", "cube")
+		LvLK3D.SetObjectPos("lokamodel", Vector(0, -4, -2.75))
+		LvLK3D.SetObjectMat("lokamodel", "white")
 
 
 		LvLK3D.SetObjectFlag("lokamodel", "SHADING", true)
 		LvLK3D.SetObjectFlag("lokamodel", "SHADING_SMOOTH", false)
-		LvLK3D.SetObjectFlag("lokamodel", "NORM_INVERT", true)
+		LvLK3D.SetObjectFlag("lokamodel", "NORM_INVERT", false)
 		LvLK3D.UpdateObjectMesh("lokamodel")
+		--LvLK3D.SetObjectScl("lokamodel", Vector(.5, .5, .5))
+
+		LvLK3D.SetObjectShadow("lokamodel", true)
 
 
 
 
 		LvLK3D.SetTextureFilter("train_sheet", "nearest", "nearest")
 		LvLK3D.AddObjectToUniv("train", "train")
-		LvLK3D.SetObjectPos("train", Vector(4, 0, -4))
+		LvLK3D.SetObjectPos("train", Vector(16, 0, -4))
 		LvLK3D.SetObjectMat("train", "train_sheet")
 		LvLK3D.SetObjectFlag("train", "SHADING", true)
 		LvLK3D.SetObjectFlag("train", "SHADING_SMOOTH", true)
@@ -79,7 +91,7 @@ function love.load()
 
 
 		LvLK3D.AddObjectToUniv("rail", "traintrack")
-		LvLK3D.SetObjectPos("rail", Vector(4, -2, -4))
+		LvLK3D.SetObjectPos("rail", Vector(16, -2, -4))
 		LvLK3D.SetObjectMat("rail", "traintrack_sheet")
 	LvLK3D.PopUniverse()
 
@@ -92,7 +104,8 @@ function love.update(dt)
 	LvLK3D.MouseCamThink(dt)
 
 	LvLK3D.PushUniverse(UnivTest)
-	LvLK3D.SetObjectAng("cube1", Angle(CurTime * 24, CurTime * 32, 0))
+		LvLK3D.SetObjectAng("cube1", Angle(CurTime * 24, CurTime * 32, 0))
+		--LvLK3D.SetObjectPos("cube1", Vector(math.sin(CurTime * .75) * 2.65, 0, math.cos(CurTime * .4532) * 2.5))
 	LvLK3D.PopUniverse()
 
 

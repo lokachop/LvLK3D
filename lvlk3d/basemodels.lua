@@ -16,6 +16,7 @@ local function loadModelFromOBJ(name, path)
 end
 
 loadModelFromOBJ("cube", "models/cubenuv.obj")
+loadModelFromOBJ("plane", "models/plane.obj")
 loadModelFromOBJ("lokachop_sqr", "models/lokachopsqr.obj")
 
 loadModelFromOBJ("traintrack_hq", "models/traintrack.obj")

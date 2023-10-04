@@ -28,7 +28,7 @@ function LvLK3D.PushRenderTarget(rt)
     LvLK3D.CurrRT = rt
 
 
-    love.graphics.setCanvas({LvLK3D.CurrRT, depth = true})
+    love.graphics.setCanvas({LvLK3D.CurrRT, depth = true, stencil = true})
 end
 
 function LvLK3D.PopRenderTarget()
@@ -38,7 +38,7 @@ function LvLK3D.PopRenderTarget()
     if #LvLK3D.RTStack <= 0 then
         love.graphics.setCanvas()
     else
-        love.graphics.setCanvas({LvLK3D.CurrRT, depth = true})
+        love.graphics.setCanvas({LvLK3D.CurrRT, depth = true, stencil = true})
     end
 end
 
@@ -49,14 +49,14 @@ end
 
 
 function LvLK3D.ClearDepth()
-    --love.graphics.setCanvas({LvLK3D.CurrRT, depth = true})
+    --love.graphics.setCanvas({LvLK3D.CurrRT, depth = true, stencil = true})
         love.graphics.clear(false, false, true)
     --love.graphics.setCanvas()
 end
 
 
 function LvLK3D.ClearStencil()
-    --love.graphics.setCanvas({LvLK3D.CurrRT, depth = true})
+    --love.graphics.setCanvas({LvLK3D.CurrRT, depth = true, stencil = true})
         love.graphics.clear(false, true, false)
     --love.graphics.setCanvas()
 end
@@ -67,6 +67,8 @@ function LvLK3D.RenderRTFullScreen(rt)
 
     local rtW, rtH = currRT:getDimensions()
     local w, h = love.graphics.getDimensions()
+
+    love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.draw(currRT, 0, 0, 0, w / rtW, h / rtH)
     love.graphics.setBlendMode("alpha")

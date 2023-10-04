@@ -6,6 +6,6 @@ function love.conf(t)
     t.window.height = 600
     t.window.depth = 16
     t.window.vsync = 1
-    t.console = true
+    t.console = false
     t.modules.joystick = false
 end

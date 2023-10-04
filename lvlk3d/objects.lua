@@ -77,6 +77,7 @@ function LvLK3D.AddObjectToUniv(name, mdl)
 		mat_rot = mat_rot,
 		mat_transscl = mat_transscl,
 		mat_mdl = mat_mdl,
+		shader = "base",
 	}
 
 	--[[

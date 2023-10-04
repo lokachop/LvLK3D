@@ -193,6 +193,12 @@ local v_meta = {
     ["DistToSqr"] = function(x, y)
         return math.pow(x[1] - y[1], 2) + math.pow(x[2] - y[2], 2) + math.pow(x[3] - y[3], 2)
     end,
+    ["Unpack"] = function(x)
+        return x[1], x[2], x[3]
+    end,
+    ["Unpack4"] = function(x)
+        return x[1], x[2], x[3], x[4]
+    end,
     ["isvec"] = true
 }
 

@@ -3,8 +3,6 @@ LvLK3D.Version = "0.1"
 LvLK3D.Debug = true
 LvLK3D.FilterMode = "nearest"
 
-love.graphics.setDepthMode("lequal", true)
-
 local relaPath = "lvlk3d/"
 function LvLK3D.LoadFile(path)
     require(relaPath .. path)
