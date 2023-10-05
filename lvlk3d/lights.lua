@@ -36,7 +36,7 @@ function LvLK3D.SetLightCol(name, col)
 end
 
 
-function LvLK3D.RemoveLigh(name)
+function LvLK3D.RemoveLight(name)
 	if not LvLK3D.CurrUniv["lights"][name] then
 		return
 	end

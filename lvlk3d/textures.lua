@@ -2,6 +2,55 @@
 LvLK3D = LvLK3D or {}
 LvLK3D.Textures = LvLK3D.Textures or {}
 
+function LvLK3D.NewTextureFunc(name, w, h, func)
+    local canvasData = love.graphics.newCanvas(w, h)
+    local _oldCanvas = love.graphics.getCanvas()
+    local _oldShader = love.graphics.getShader()
+
+    love.graphics.setShader()
+    love.graphics.setCanvas(canvasData)
+        love.graphics.setColor(1, 1, 1, 1)
+        func(w, h)
+    love.graphics.setCanvas(_oldCanvas)
+    love.graphics.setShader(_oldShader)
+    LvLK3D.Textures[name] = canvasData
+end
+
+function LvLK3D.RenderTexture(name, func)
+    local canvasData = LvLK3D.Textures[name]
+    local _oldCanvas = love.graphics.getCanvas()
+    local _oldShader = love.graphics.getShader()
+
+    love.graphics.setShader()
+    love.graphics.setCanvas(canvasData)
+        love.graphics.setColor(1, 1, 1, 1)
+        func(canvasData:getDimensions())
+    love.graphics.setCanvas(_oldCanvas)
+    love.graphics.setShader(_oldShader)
+end
+
+function LvLK3D.CopyTexture(name, to)
+    local otherCanvas = LvLK3D.Textures[name]
+
+    local oW, oH = otherCanvas:getDimensions()
+
+    local canvasData = love.graphics.newCanvas(oW, oH)
+    local _oldCanvas = love.graphics.getCanvas()
+    local _oldShader = love.graphics.getShader()
+
+    love.graphics.setShader()
+    love.graphics.setCanvas(canvasData)
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.setBlendMode("alpha", "premultiplied")
+        love.graphics.draw(otherCanvas, 0, 0)
+        love.graphics.setBlendMode("alpha")
+    love.graphics.setCanvas(_oldCanvas)
+    love.graphics.setShader(_oldShader)
+
+
+    LvLK3D.Textures[to] = canvasData
+end
+
 local function readByte(fileObject)
     return string.byte(fileObject:read(1))
 end
@@ -89,6 +138,7 @@ function LvLK3D.NewTexturePPM(name, path)
     local _oldCanvas = love.graphics.getCanvas()
     local _oldShader = love.graphics.getShader()
     -- slow pixel loading
+    love.graphics.setShader()
     love.graphics.setCanvas(canvasData)
     local pixToRead = w * h
     for i = 0, (pixToRead - 1) do
@@ -112,6 +162,31 @@ function LvLK3D.NewTexturePPM(name, path)
     LvLK3D.Textures[name] = canvasData
 end
 
+function LvLK3D.NewTexturePNG(name, path)
+    print("---LvLK3D-PNGLoad---")
+    print("Loading texture at \"" .. path .. "\"")
+
+    local imgDraw = love.graphics.newImage(path)
+    if not imgDraw then
+        LvLK3D.CopyTexture("fail", name)
+    end
+
+    local w, h = imgDraw:getDimensions()
+    local canvasData = love.graphics.newCanvas(w, h)
+    local _oldCanvas = love.graphics.getCanvas()
+    local _oldShader = love.graphics.getShader()
+
+    love.graphics.setShader()
+    love.graphics.setCanvas(canvasData)
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.draw(imgDraw, 0, 0)
+    love.graphics.setCanvas(_oldCanvas)
+    love.graphics.setShader(_oldShader)
+    LvLK3D.Textures[name] = canvasData
+end
+
+
+
 function LvLK3D.GetTexture(name)
     local tex = LvLK3D.Textures[name]
     if not tex then
@@ -126,6 +201,7 @@ function LvLK3D.NewTextureEmpty(name, w, h, col)
     local _oldCanvas = love.graphics.getCanvas()
     local _oldShader = love.graphics.getShader()
 
+    love.graphics.setShader()
     love.graphics.setCanvas(canvasData)
         love.graphics.clear(col[1] / 255, col[2] / 255, col[3] / 255)
     love.graphics.setCanvas(_oldCanvas)
@@ -140,6 +216,7 @@ function LvLK3D.NewTexturePixel(name, w, h, func)
     local _oldCanvas = love.graphics.getCanvas()
     local _oldShader = love.graphics.getShader()
 
+    love.graphics.setShader()
     love.graphics.setCanvas(canvasData)
         for i = 0, ((w * h) - 1) do
             local xc = i % w
@@ -158,53 +235,6 @@ function LvLK3D.NewTexturePixel(name, w, h, func)
     LvLK3D.Textures[name] = canvasData
 end
 
-function LvLK3D.NewTextureFunc(name, w, h, func)
-    local canvasData = love.graphics.newCanvas(w, h)
-    local _oldCanvas = love.graphics.getCanvas()
-    local _oldShader = love.graphics.getShader()
-
-    love.graphics.setCanvas(canvasData)
-        love.graphics.setColor(1, 1, 1, 1)
-        func(w, h)
-    love.graphics.setCanvas(_oldCanvas)
-    love.graphics.setShader(_oldShader)
-    LvLK3D.Textures[name] = canvasData
-end
-
-function LvLK3D.RenderTexture(name, func)
-    local canvasData = love.graphics.newCanvas(w, h)
-    local _oldCanvas = love.graphics.getCanvas()
-    local _oldShader = love.graphics.getShader()
-
-    love.graphics.setCanvas(canvasData)
-        love.graphics.setColor(1, 1, 1, 1)
-        func()
-    love.graphics.setCanvas(_oldCanvas)
-    love.graphics.setShader(_oldShader)
-end
-
-
-
-function LvLK3D.CopyTexture(name, to)
-    local otherCanvas = LvLK3D.Textures[name]
-
-    local oW, oH = otherCanvas:getDimensions()
-
-    local canvasData = love.graphics.newCanvas(oW, oH)
-    local _oldCanvas = love.graphics.getCanvas()
-    local _oldShader = love.graphics.getShader()
-
-    love.graphics.setCanvas(canvasData)
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.setBlendMode("alpha", "premultiplied")
-        love.graphics.draw(otherCanvas, 0, 0)
-        love.graphics.setBlendMode("alpha")
-    love.graphics.setCanvas(_oldCanvas)
-    love.graphics.setShader(_oldShader)
-
-
-    LvLK3D.Textures[to] = canvasData
-end
 
 function LvLK3D.SetTextureFilter(name, near, far)
     LvLK3D.Textures[name]:setFilter(near, far or near)

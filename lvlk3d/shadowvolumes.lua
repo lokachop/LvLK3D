@@ -210,7 +210,7 @@ function LvLK3D.SetObjectShadow(name, shouldCast)
 end
 
 
-LvLK3D.NewShader("shadowvolume", "lvlk3d/shader/shadowvolume.frag", "lvlk3d/shader/shadowvolume.vert", function(obj, shader)
+LvLK3D.NewShader("shadowvolume", "lvlk3d/shader/mesh/shadowvolume.frag", "lvlk3d/shader/mesh/shadowvolume.vert", function(obj, shader)
 	shader:send("mdlRotationMatrix", obj.mat_rot)
 	shader:send("mdlTranslationMatrix", obj.mat_transscl)
 
@@ -224,7 +224,7 @@ LvLK3D.NewShader("shadowvolume", "lvlk3d/shader/shadowvolume.frag", "lvlk3d/shad
 	shader:send("lightPos", obj.SHADOW_LIGHT_POS)
 end)
 
-LvLK3D.NewShader("shadowcap", "lvlk3d/shader/shadowcap.frag", "lvlk3d/shader/shadowcap.vert", function(obj, shader)
+LvLK3D.NewShader("shadowcap", "lvlk3d/shader/mesh/shadowcap.frag", "lvlk3d/shader/mesh/shadowcap.vert", function(obj, shader)
 	shader:send("mdlRotationMatrix", obj.mat_rot)
 	shader:send("mdlTranslationMatrix", obj.mat_transscl)
 
@@ -241,7 +241,7 @@ LvLK3D.NewShader("shadowcap", "lvlk3d/shader/shadowcap.frag", "lvlk3d/shader/sha
 end)
 
 
-LvLK3D.NewShader("shadowvolumesun", "lvlk3d/shader/shadowvolume.frag", "lvlk3d/shader/shadowvolumesun.vert", function(obj, shader)
+LvLK3D.NewShader("shadowvolumesun", "lvlk3d/shader/mesh/shadowvolume.frag", "lvlk3d/shader/mesh/shadowvolumesun.vert", function(obj, shader)
 	shader:send("mdlRotationMatrix", obj.mat_rot)
 	shader:send("mdlTranslationMatrix", obj.mat_transscl)
 
@@ -257,7 +257,7 @@ LvLK3D.NewShader("shadowvolumesun", "lvlk3d/shader/shadowvolume.frag", "lvlk3d/s
 	shader:send("lightDir", obj.SHADOW_LIGHT_POS)
 end)
 
-LvLK3D.NewShader("shadowcapsun", "lvlk3d/shader/shadowcap.frag", "lvlk3d/shader/shadowcapsun.vert", function(obj, shader)
+LvLK3D.NewShader("shadowcapsun", "lvlk3d/shader/mesh/shadowcap.frag", "lvlk3d/shader/mesh/shadowcapsun.vert", function(obj, shader)
 	shader:send("mdlRotationMatrix", obj.mat_rot)
 	shader:send("mdlTranslationMatrix", obj.mat_transscl)
 

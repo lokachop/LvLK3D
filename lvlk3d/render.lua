@@ -90,7 +90,7 @@ local function renderActiveUniverseLit()
 
     local _renderShadowed = {}
     for k, v in pairs(LvLK3D.CurrUniv["objects"]) do
-        if v["IGNORE_LIGHTING"] then
+        if v["FULLBRIGHT"] then
             renderObject(v, depthWriteShader)
         else
             v["LIT_AMBIENT"] = worldParams.ambientCol
@@ -116,7 +116,7 @@ local function renderActiveUniverseLit()
         love.graphics.setDepthMode("lequal", true)
         love.graphics.setStencilTest("equal", 0)
             for k2, v2 in pairs(LvLK3D.CurrUniv["objects"]) do
-                if v2["IGNORE_LIGHTING"] then
+                if v2["FULLBRIGHT"] then
                     renderObject(v2)
                 else
                     v2["LIT_LIGHT_POS"] = -worldParams["sunDir"]
@@ -126,6 +126,12 @@ local function renderActiveUniverseLit()
                 end
             end
         love.graphics.setStencilTest()
+    else
+        for k2, v2 in pairs(LvLK3D.CurrUniv["objects"]) do
+            if v2["FULLBRIGHT"] then
+                renderObject(v2)
+            end
+        end
     end
 
 
@@ -140,9 +146,7 @@ local function renderActiveUniverseLit()
         love.graphics.setDepthMode("lequal", true)
         love.graphics.setStencilTest("equal", 0)
             for k2, v2 in pairs(LvLK3D.CurrUniv["objects"]) do
-                if v2["IGNORE_LIGHTING"] then
-                    renderObject(v2)
-                else
+                if not v2["FULLBRIGHT"] then
                     v2["LIT_LIGHT_POS"] = v.pos
                     v2["LIT_LIGHT_COL"] = v.col
                     v2["LIT_LIGHT_INT"] = v.intensity

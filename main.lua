@@ -26,6 +26,8 @@ function love.load()
 	LvLK3D.SetTextureFilter("traintrack_sheet", "nearest", "nearest")
 	LvLK3D.SetTextureWrap("traintrack_sheet", "repeat")
 
+	LvLK3D.NewTexturePNG("happyPNGTest", "textures/happy.png")
+
 
 
 	LvLK3D.PushUniverse(UnivTest)
@@ -44,11 +46,12 @@ function love.load()
 
 		LvLK3D.AddObjectToUniv("cube1", "cube")
 		LvLK3D.SetObjectPos("cube1", Vector(0, 0, 0))
-		LvLK3D.SetObjectMat("cube1", "none")
+		LvLK3D.SetObjectMat("cube1", "happyPNGTest")
 
 		LvLK3D.SetObjectFlag("cube1", "SHADING", true)
 		LvLK3D.SetObjectFlag("cube1", "SHADING_SMOOTH", false)
 		LvLK3D.SetObjectFlag("cube1", "NORM_INVERT", false)
+		LvLK3D.SetObjectFlag("cube1", "FULLBRIGHT", false)
 		LvLK3D.SetObjectScl("cube1", Vector(.5, .5, .5))
 		LvLK3D.UpdateObjectMesh("cube1")
 
@@ -66,12 +69,11 @@ function love.load()
 
 		LvLK3D.AddObjectToUniv("lokamodel", "cube")
 		LvLK3D.SetObjectPos("lokamodel", Vector(0, -4, -2.75))
-		LvLK3D.SetObjectMat("lokamodel", "none")
-
-
+		LvLK3D.SetObjectMat("lokamodel", "happyPNGTest")
 		LvLK3D.SetObjectFlag("lokamodel", "SHADING", true)
 		LvLK3D.SetObjectFlag("lokamodel", "SHADING_SMOOTH", false)
 		LvLK3D.SetObjectFlag("lokamodel", "NORM_INVERT", false)
+		LvLK3D.SetObjectFlag("lokamodel", "FULLBRIGHT", false)
 		LvLK3D.UpdateObjectMesh("lokamodel")
 
 		LvLK3D.SetObjectShadow("lokamodel", true)
@@ -99,7 +101,7 @@ function love.load()
 			LvLK3D.SetObjectMat(idx, "white")
 
 			LvLK3D.SetObjectFlag(idx, "SHADING", false)
-			LvLK3D.SetObjectFlag(idx, "IGNORE_LIGHTING", true)
+			LvLK3D.SetObjectFlag(idx, "FULLBRIGHT", true)
 			LvLK3D.SetObjectScl(idx, Vector(.1, .1, .1))
 			LvLK3D.SetObjectCol(idx, v.col)
 		end
