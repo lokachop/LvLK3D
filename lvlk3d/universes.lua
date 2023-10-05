@@ -12,7 +12,10 @@ function LvLK3D.NewUniverse(tag)
         ["lightCount"] = 0,
         ["tag"] = tag,
         ["worldParameteri"] = {
-            ["SunDir"] = Vector(0, 0, -1)
+            ["doSunLighting"] = true,
+            ["sunCol"] = {1, 1, 1},
+            ["sunDir"] = Vector(0, -2, 0):GetNormalized(),
+            ["ambientCol"] = {0.0, 0.0, 0.0}
         }
     }
 
@@ -60,4 +63,29 @@ function LvLK3D.GetUniverseParams(univ)
     univ = univ or LvLK3D.CurrUniv
 
     return univ.worldParameteri
+end
+
+
+function LvLK3D.SetSunLighting(bool, univ)
+    univ = univ or LvLK3D.CurrUniv
+
+    univ.worldParameteri["doSunLighting"] = bool
+end
+
+function LvLK3D.SetSunCol(col, univ)
+    univ = univ or LvLK3D.CurrUniv
+
+    univ.worldParameteri["sunCol"] = col or {1, 1, 1}
+end
+
+function LvLK3D.SetSunDir(dir, univ)
+    univ = univ or LvLK3D.CurrUniv
+
+    univ.worldParameteri["sunDir"] = dir or Vector(1, 2, 4):GetNormalized()
+end
+
+function LvLK3D.SetAmbientCol(col, univ)
+    univ = univ or LvLK3D.CurrUniv
+
+    univ.worldParameteri["ambientCol"] = col or {0, 0, 0}
 end

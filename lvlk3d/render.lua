@@ -16,30 +16,32 @@ local function renderObject(obj, shaderOverride)
 end
 
 local shadowShader = LvLK3D.GetShader("shadowvolume")
-local shadowShaderObj = shadowShader.shader
-
 local shadowShaderCap = LvLK3D.GetShader("shadowcap")
-local shadowShaderCapObj = shadowShaderCap.shader
 
-
-local function renderShadowed(obj, lpos, shOverride)
+local function renderShadowed(obj, lpos, shOverride, shVol, shCap)
     obj.SHADOW_LIGHT_POS = lpos
+
+    local volumeShader = shVol or shadowShader
+    local volumeShaderObj = volumeShader.shader
+
+    local capShader = shCap or shadowShaderCap
+    local capShaderObj = capShader.shader
 
     love.graphics.setDepthMode("gequal", false)
     love.graphics.stencil(function()
         -- cap
-        love.graphics.setShader(shadowShaderCapObj)
+        love.graphics.setShader(capShaderObj)
         love.graphics.setColor(0, 1, 0.5)
         obj.SHADOW_INVERT = false
         obj.CAP_FLIP = true
-        shadowShaderCap.onRender(obj, shadowShaderCapObj)
+        capShader.onRender(obj, capShaderObj)
         love.graphics.draw(obj.meshShadowCaps)
 
 
         -- volume
-        love.graphics.setShader(shadowShaderObj)
+        love.graphics.setShader(volumeShaderObj)
         obj.SHADOW_INVERT = false
-        shadowShader.onRender(obj, shadowShaderObj)
+        volumeShader.onRender(obj, volumeShaderObj)
         love.graphics.setColor(0, 1, 0)
         love.graphics.draw(obj.meshShadow)
     end, "increment", 0, true)
@@ -47,18 +49,18 @@ local function renderShadowed(obj, lpos, shOverride)
 
     love.graphics.stencil(function()
         -- cap
-        love.graphics.setShader(shadowShaderCapObj)
+        love.graphics.setShader(capShaderObj)
         love.graphics.setColor(1, 0, 0.5)
         obj.SHADOW_INVERT = true
         obj.CAP_FLIP = true
-        shadowShaderCap.onRender(obj, shadowShaderCapObj)
+        capShader.onRender(obj, capShaderObj)
         love.graphics.draw(obj.meshShadowCaps)
 
 
         -- volume
-        love.graphics.setShader(shadowShaderObj)
+        love.graphics.setShader(volumeShaderObj)
         obj.SHADOW_INVERT = true
-        shadowShader.onRender(obj, shadowShaderObj)
+        volumeShader.onRender(obj, volumeShaderObj)
         love.graphics.setColor(1, 0, 0)
         love.graphics.draw(obj.meshShadow)
     end, "decrement", 0, true)
@@ -76,35 +78,77 @@ end
 
 
 local depthWriteShader = LvLK3D.GetShader("depthwrite")
+local ambientWriteShader = LvLK3D.GetShader("ambientwrite")
 local lightingShader = LvLK3D.GetShader("lit")
+local lightingShaderSun = LvLK3D.GetShader("litsun")
+
+local shadowShaderSun = LvLK3D.GetShader("shadowvolumesun")
+local shadowShaderCapSun = LvLK3D.GetShader("shadowcapsun")
 
 local function renderActiveUniverseLit()
+    local worldParams = LvLK3D.CurrUniv["worldParameteri"]
+
     local _renderShadowed = {}
     for k, v in pairs(LvLK3D.CurrUniv["objects"]) do
-        renderObject(v, depthWriteShader)
+        if v["IGNORE_LIGHTING"] then
+            renderObject(v, depthWriteShader)
+        else
+            v["LIT_AMBIENT"] = worldParams.ambientCol
+            renderObject(v, ambientWriteShader)
+        end
 
         if v.SHADOW_VOLUME then
             _renderShadowed[#_renderShadowed + 1] = v
         end
     end
 
-    -- now we loop thru each light
-
+    -- additive...
     love.graphics.setBlendMode("add")
+
+    -- do sun pass first, if needed
+    if worldParams["doSunLighting"] == true then
+        love.graphics.clear(false, true, false)
+        for i = 1, #_renderShadowed do
+            renderShadowed(_renderShadowed[i], -worldParams["sunDir"], depthWriteShader, shadowShaderSun, shadowShaderCapSun)
+        end
+
+        -- shadow volume cutouts done! render with lights...
+        love.graphics.setDepthMode("lequal", true)
+        love.graphics.setStencilTest("equal", 0)
+            for k2, v2 in pairs(LvLK3D.CurrUniv["objects"]) do
+                if v2["IGNORE_LIGHTING"] then
+                    renderObject(v2)
+                else
+                    v2["LIT_LIGHT_POS"] = -worldParams["sunDir"]
+                    v2["LIT_LIGHT_COL"] = worldParams["sunCol"]
+
+                    renderObject(v2, lightingShaderSun)
+                end
+            end
+        love.graphics.setStencilTest()
+    end
+
+
+    -- now we loop thru each light
     for k, v in pairs(LvLK3D.CurrUniv["lights"]) do
         love.graphics.clear(false, true, false)
         for i = 1, #_renderShadowed do
             renderShadowed(_renderShadowed[i], v.pos, depthWriteShader)
         end
 
+        -- shadow volume cutouts done! render with lights...
         love.graphics.setDepthMode("lequal", true)
         love.graphics.setStencilTest("equal", 0)
             for k2, v2 in pairs(LvLK3D.CurrUniv["objects"]) do
-                v2["LIT_LIGHT_POS"] = v.pos
-                v2["LIT_LIGHT_COL"] = v.col
-                v2["LIT_LIGHT_INT"] = v.intensity
+                if v2["IGNORE_LIGHTING"] then
+                    renderObject(v2)
+                else
+                    v2["LIT_LIGHT_POS"] = v.pos
+                    v2["LIT_LIGHT_COL"] = v.col
+                    v2["LIT_LIGHT_INT"] = v.intensity
 
-                renderObject(v2, lightingShader)
+                    renderObject(v2, lightingShader)
+                end
             end
         love.graphics.setStencilTest()
     end
@@ -140,7 +184,7 @@ function LvLK3D.RenderActiveUniverse()
     love.graphics.setCanvas({LvLK3D.CurrRT, depth = true, stencil = true})
 
 
-        if LvLK3D.CurrUniv["lightCount"] > 0 then
+        if (LvLK3D.CurrUniv["lightCount"] > 0) or (LvLK3D.CurrUniv["worldParameteri"].doSunLighting == true) then
             renderActiveUniverseLit()
         else
             renderActiveUniverseNonLit()

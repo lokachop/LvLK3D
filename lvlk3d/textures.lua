@@ -236,6 +236,9 @@ LvLK3D.NewTextureFunc("fail", 2, 2, function(w, h)
 end)
 LvLK3D.SetTextureFilter("fail", "nearest", "nearest")
 
+LvLK3D.NewTextureEmpty("white", 2, 2, {255, 255, 255})
+LvLK3D.NewTextureEmpty("indigo", 2, 2, {51, 0, 153})
+
 
 --[[
 LvLK3D.NewTexturePPM("cubemap",            "textures/cubemap_lq.ppm")

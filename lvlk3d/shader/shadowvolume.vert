@@ -18,7 +18,6 @@ varying vec4 worldPosition;
 varying vec4 viewPosition;
 varying vec4 screenPosition;
 varying vec3 vertexNormal;
-varying vec3 rotatedNormal;
 varying vec4 vertexColor;
 
 vec4 position(mat4 transformProjection, vec4 vertexPosition) {
@@ -32,34 +31,28 @@ vec4 position(mat4 transformProjection, vec4 vertexPosition) {
     worldPosition = mdlMatrix * vertexPosition;
 
     vertexNormal = VertexNormal;
-    rotatedNormal = vec3(mdlRotationMatrix * vec4(VertexNormal, 1.0));
+    vec3 rotatedNormal = vec3(mdlRotationMatrix * vec4(VertexNormal, 1.0));
     //rotatedNormal *= normInvert ? -1 : 1;
 
     //shadow volume shit
     vec3 worldShadow = vec3(worldPosition) - lightPos;
-
     float incidentDot = dot(rotatedNormal, worldShadow);
 
 
     if(incidentDot < 0) {
-        vec3 dir = (worldShadow) * 64;
+        vec3 dir = (worldShadow) * 16;
         worldPosition += vec4(dir, 0);
-        //rotatedNormal *= -1;
     }
 
 
     viewPosition = viewMatrix * worldPosition;
     screenPosition = projectionMatrix * viewPosition;
 
-    // save some data from this vertex for use in fragment shaders
     vertexColor = VertexColor;
 
     // canvas is always on
     screenPosition.y *= -1.0;
     screenPosition.x *= -1.0;
-
-
-
 
 
     return screenPosition;

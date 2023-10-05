@@ -10,7 +10,7 @@ local _baseOnRender = function(obj, shader)
     --shader:send("mdlMatrix", obj.mat_mdl)
     shader:send("viewMatrix", LvLK3D.CamMatrix_Rot * LvLK3D.CamMatrix_Trans)
     shader:send("projectionMatrix", LvLK3D.CamMatrix_Proj)
-    shader:send("sunDir", LvLK3D.SunDir)
+    shader:send("sunDir", -LvLK3D.CurrUniv["worldParameteri"].sunDir)
 
     shader:send("doShading", (obj["SHADING"] == true) and true or false)
     shader:send("normInvert", (obj["NORM_INVERT"] == true) and true or false)
@@ -57,6 +57,17 @@ LvLK3D.NewShader("depthwrite", "lvlk3d/shader/depthwrite.frag", "lvlk3d/shader/d
     shader:send("normInvert", (obj["NORM_INVERT"] == true) and true or false)
 end)
 
+LvLK3D.NewShader("ambientwrite", "lvlk3d/shader/ambientwrite.frag", "lvlk3d/shader/depthwrite.vert", function(obj, shader)
+    shader:send("mdlRotationMatrix", obj.mat_rot)
+    shader:send("mdlTranslationMatrix", obj.mat_transscl)
+
+    shader:send("viewMatrix", LvLK3D.CamMatrix_Rot * LvLK3D.CamMatrix_Trans)
+    shader:send("projectionMatrix", LvLK3D.CamMatrix_Proj)
+
+    shader:send("normInvert", (obj["NORM_INVERT"] == true) and true or false)
+    shader:send("ambientCol", obj["LIT_AMBIENT"])
+end)
+
 LvLK3D.NewShader("lit", "lvlk3d/shader/lit.frag", "lvlk3d/shader/lit.vert", function(obj, shader)
     shader:send("mdlRotationMatrix", obj.mat_rot)
     shader:send("mdlTranslationMatrix", obj.mat_transscl)
@@ -75,3 +86,20 @@ LvLK3D.NewShader("lit", "lvlk3d/shader/lit.frag", "lvlk3d/shader/lit.vert", func
     shader:send("lightIntensity", obj["LIT_LIGHT_INT"])
 end)
 
+
+LvLK3D.NewShader("litsun", "lvlk3d/shader/litsun.frag", "lvlk3d/shader/lit.vert", function(obj, shader)
+    shader:send("mdlRotationMatrix", obj.mat_rot)
+    shader:send("mdlTranslationMatrix", obj.mat_transscl)
+
+    --shader:send("mdlMatrix", obj.mat_mdl)
+    shader:send("viewMatrix", LvLK3D.CamMatrix_Rot * LvLK3D.CamMatrix_Trans)
+    shader:send("projectionMatrix", LvLK3D.CamMatrix_Proj)
+
+    shader:send("normInvert", (obj["NORM_INVERT"] == true) and true or false)
+
+    shader:send("doShading", (obj["SHADING"] == true) and true or false)
+
+
+    shader:send("lightDir", obj["LIT_LIGHT_POS"])
+    shader:send("lightColour", obj["LIT_LIGHT_COL"])
+end)

@@ -11,10 +11,6 @@ function love.load()
 
 
 
-	LvLK3D.NewTextureEmpty("white", 16, 16, {255, 255, 255})
-	LvLK3D.NewTextureEmpty("indigo", 2, 2, {51, 0, 153})
-
-
 	LvLK3D.NewTexturePPM("loka",       "textures/loka.ppm")
 
 	LvLK3D.NewTexturePPM("mandrill",   "textures/mandrill.ppm")
@@ -33,9 +29,16 @@ function love.load()
 
 
 	LvLK3D.PushUniverse(UnivTest)
-		LvLK3D.AddLightToUniv("LightOne", Vector(0, 3, 0), 4, {0.25, 0.25, 1})
+		LvLK3D.SetSunLighting(false) -- dont do sun lighting
+		LvLK3D.SetSunCol({1, 1, 1}) -- set col to weird yellow
+		--LvLK3D.SetAmbientCol({1 / 10, 1 / 10, 1 / 10}) -- ambient to darker weird yellow
 
-		LvLK3D.AddLightToUniv("LightTwo", Vector(4, 3, 0), 4, {0.25, 1, 0.25})
+
+
+
+		LvLK3D.AddLightToUniv("LightOne", Vector(0, 3, 0), 2, {0.25, 0.25, 1})
+		LvLK3D.AddLightToUniv("LightTwo", Vector(4, 3, 0), 2, {0.25, 1, 0.25})
+		LvLK3D.AddLightToUniv("LightThree", Vector(4, 3, 0), 2, {1, 0.25, 0.25})
 
 
 
@@ -46,7 +49,9 @@ function love.load()
 		LvLK3D.SetObjectFlag("cube1", "SHADING", true)
 		LvLK3D.SetObjectFlag("cube1", "SHADING_SMOOTH", false)
 		LvLK3D.SetObjectFlag("cube1", "NORM_INVERT", false)
-		--LvLK3D.SetObjectScl("cube1", Vector(.5, .5, .5))
+		LvLK3D.SetObjectScl("cube1", Vector(.5, .5, .5))
+		LvLK3D.UpdateObjectMesh("cube1")
+
 		LvLK3D.SetObjectShadow("cube1", true)
 
 		LvLK3D.AddObjectToUniv("plane_floor", "plane")
@@ -68,17 +73,13 @@ function love.load()
 		LvLK3D.SetObjectFlag("lokamodel", "SHADING_SMOOTH", false)
 		LvLK3D.SetObjectFlag("lokamodel", "NORM_INVERT", false)
 		LvLK3D.UpdateObjectMesh("lokamodel")
-		--LvLK3D.SetObjectScl("lokamodel", Vector(.5, .5, .5))
 
 		LvLK3D.SetObjectShadow("lokamodel", true)
 
 
-
-
-		LvLK3D.SetTextureFilter("train_sheet", "nearest", "nearest")
 		LvLK3D.AddObjectToUniv("train", "train")
-		LvLK3D.SetObjectPos("train", Vector(4, -2, -3))
-		LvLK3D.SetObjectMat("train", "train_sheet")
+		LvLK3D.SetObjectPos("train", Vector(4, -2.05, -3))
+		LvLK3D.SetObjectMat("train", "white")
 		LvLK3D.SetObjectFlag("train", "SHADING", true)
 		LvLK3D.SetObjectFlag("train", "SHADING_SMOOTH", false)
 		LvLK3D.UpdateObjectMesh("train")
@@ -98,6 +99,7 @@ function love.load()
 			LvLK3D.SetObjectMat(idx, "white")
 
 			LvLK3D.SetObjectFlag(idx, "SHADING", false)
+			LvLK3D.SetObjectFlag(idx, "IGNORE_LIGHTING", true)
 			LvLK3D.SetObjectScl(idx, Vector(.1, .1, .1))
 			LvLK3D.SetObjectCol(idx, v.col)
 		end
@@ -126,12 +128,9 @@ function love.update(dt)
 
 
 		updateLightAndExShadow("LightOne", Vector(math.cos(CurTime * .65) * 5.6546, 3, math.sin(CurTime * .7645767) * 6.523))
-
 		updateLightAndExShadow("LightTwo", Vector(math.cos(CurTime * 1.85) * 8.6546, math.sin(CurTime * 1.24) + 3, math.sin(CurTime * 1.2645767) * 10.523))
+		updateLightAndExShadow("LightThree", Vector(math.cos(CurTime * 0.125) * 12.6546, (math.sin(CurTime * 0.62) * 2) + 3, math.sin(CurTime * 0.25645767) * 10.523))
 	LvLK3D.PopUniverse()
-
-
-	--LvLK3D.SunDir = LvLK3D.CamMatrix_Rot:Forward()
 end
 
 function love.keypressed(key)

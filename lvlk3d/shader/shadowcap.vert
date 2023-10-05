@@ -40,13 +40,13 @@ vec4 position(mat4 transformProjection, vec4 vertexPosition) {
     if(capFlip) {
         if(incidentDot < 0) {
             //worldPosition = vec4(0, 0, 0, 0);
-            vec3 dir = (worldShadow) * 64;
+            vec3 dir = (worldShadow) * 16;
             worldPosition += vec4(dir, 0);
             //rotatedNormal *= -1;
         }
     } else {
         if(incidentDot > 0) {
-            vec3 dir = (worldShadow) * 64;
+            vec3 dir = (worldShadow) * 16;
             worldPosition += vec4(dir, 0);
             //rotatedNormal *= -1;
         }
