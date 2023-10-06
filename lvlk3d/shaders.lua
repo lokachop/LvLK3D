@@ -2,7 +2,7 @@ LvLK3D = LvLK3D or {}
 LvLK3D.ShaderRegistry = {}
 LvLK3D.CurrShader = nil
 
-local _baseVsh = "lvlk3d/shader/mesh/generic.vert"
+local _baseVsh = LvLK3D.RelaPath .. "/shader/mesh/generic.vert"
 local _baseOnRender = function(obj, shader)
     shader:send("mdlRotationMatrix", obj.mat_rot)
     shader:send("mdlTranslationMatrix", obj.mat_transscl)
@@ -42,12 +42,12 @@ function LvLK3D.SetShader(name)
     end
 end
 
-LvLK3D.NewShader("base", "lvlk3d/shader/mesh/generic.frag", "lvlk3d/shader/mesh/generic.vert")
+LvLK3D.NewShader("base", LvLK3D.RelaPath .. "/shader/mesh/generic.frag", LvLK3D.RelaPath .. "/shader/mesh/generic.vert")
 LvLK3D.SetShader("base")
 
 
 
-LvLK3D.NewShader("depthwrite", "lvlk3d/shader/mesh/depthwrite.frag", "lvlk3d/shader/mesh/depthwrite.vert", function(obj, shader)
+LvLK3D.NewShader("depthwrite", LvLK3D.RelaPath .. "/shader/mesh/depthwrite.frag", LvLK3D.RelaPath .. "/shader/mesh/depthwrite.vert", function(obj, shader)
     shader:send("mdlRotationMatrix", obj.mat_rot)
     shader:send("mdlTranslationMatrix", obj.mat_transscl)
 
@@ -57,7 +57,7 @@ LvLK3D.NewShader("depthwrite", "lvlk3d/shader/mesh/depthwrite.frag", "lvlk3d/sha
     shader:send("normInvert", (obj["NORM_INVERT"] == true) and true or false)
 end)
 
-LvLK3D.NewShader("ambientwrite", "lvlk3d/shader/mesh/ambientwrite.frag", "lvlk3d/shader/mesh/depthwrite.vert", function(obj, shader)
+LvLK3D.NewShader("ambientwrite", LvLK3D.RelaPath .. "/shader/mesh/ambientwrite.frag", LvLK3D.RelaPath .. "/shader/mesh/depthwrite.vert", function(obj, shader)
     shader:send("mdlRotationMatrix", obj.mat_rot)
     shader:send("mdlTranslationMatrix", obj.mat_transscl)
 
@@ -68,7 +68,7 @@ LvLK3D.NewShader("ambientwrite", "lvlk3d/shader/mesh/ambientwrite.frag", "lvlk3d
     shader:send("ambientCol", obj["LIT_AMBIENT"])
 end)
 
-LvLK3D.NewShader("lit", "lvlk3d/shader/mesh/lit.frag", "lvlk3d/shader/mesh/generic.vert", function(obj, shader)
+LvLK3D.NewShader("lit", LvLK3D.RelaPath .. "/shader/mesh/lit.frag", LvLK3D.RelaPath .. "/shader/mesh/generic.vert", function(obj, shader)
     shader:send("mdlRotationMatrix", obj.mat_rot)
     shader:send("mdlTranslationMatrix", obj.mat_transscl)
 
@@ -87,7 +87,7 @@ LvLK3D.NewShader("lit", "lvlk3d/shader/mesh/lit.frag", "lvlk3d/shader/mesh/gener
 end)
 
 
-LvLK3D.NewShader("litsun", "lvlk3d/shader/mesh/litsun.frag", "lvlk3d/shader/mesh/generic.vert", function(obj, shader)
+LvLK3D.NewShader("litsun", LvLK3D.RelaPath .. "/shader/mesh/litsun.frag", LvLK3D.RelaPath .. "/shader/mesh/generic.vert", function(obj, shader)
     shader:send("mdlRotationMatrix", obj.mat_rot)
     shader:send("mdlTranslationMatrix", obj.mat_transscl)
 

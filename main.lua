@@ -27,6 +27,115 @@ function love.load()
 	LvLK3D.SetTextureWrap("traintrack_sheet", "repeat")
 
 	LvLK3D.NewTexturePNG("happyPNGTest", "textures/happy.png")
+	--LvLK3D.ProcTexApplyEffectTest("happyPNGTest")
+
+
+	--LvLK3D.ProcTexApplyColour(tempProcTest, 1, 0, 1)
+	--LvLK3D.ProcTexWorleyMultiply(tempProcTest, 3, 3)
+
+	local tempProcTestMaskX = LvLK3D.ProcTexNewTemp(512, 512)
+	LvLK3D.ProcTexApplyColour(tempProcTestMaskX, 1, 0, 0)
+	--LvLK3D.ProcTexSimplexMultiply(tempProcTestMask, 2, 2)
+	--LvLK3D.ProcTexSimplexMultiply(tempProcTestMask, 4, 4)
+	LvLK3D.ProcTexSimplexMultiply(tempProcTestMaskX, 6, 6)
+	LvLK3D.ProcTexSimplexMultiply(tempProcTestMaskX, 14, 14)
+	LvLK3D.ProcTexSimplexMultiply(tempProcTestMaskX, 24, 24)
+
+	--LvLK3D.ProcTexApplyColourAdd(tempProcTestMask, 0.1, 0.1, 0.1)
+	--LvLK3D.ProcTexApplyColourMul(tempProcTestMaskX, 1, 0, 0)
+
+
+
+	local tempProcTestMaskY = LvLK3D.ProcTexNewTemp(512, 512)
+	LvLK3D.ProcTexApplyColour(tempProcTestMaskY, 0, 1, 0)
+	LvLK3D.ProcTexSimplexMultiply(tempProcTestMaskY, 8.46, 9.53)
+	LvLK3D.ProcTexSimplexMultiply(tempProcTestMaskY, 17.325, 11.235)
+	LvLK3D.ProcTexSimplexMultiply(tempProcTestMaskY, 26.53, 28.64)
+	LvLK3D.ProcTexMergeAdd(tempProcTestMaskX, tempProcTestMaskY)
+
+	--LvLK3D.ProcTexWorleyMultiply(tempProcTestMask, 2, 2)
+	--LvLK3D.ProcTexInvert(tempProcTestMask)
+
+
+	local tempProcTestDistortX = LvLK3D.ProcTexNewTemp(512, 512)
+	LvLK3D.ProcTexApplyColour(tempProcTestDistortX, 1, 1, 1)
+	LvLK3D.ProcTexWorleyMultiply(tempProcTestDistortX, 2.54, 1.35)
+	LvLK3D.ProcTexInvert(tempProcTestDistortX)
+	LvLK3D.ProcTexApplyColourMul(tempProcTestDistortX, 1, 0, 0)
+
+
+	local tempProcTestDistortY = LvLK3D.ProcTexNewTemp(512, 512)
+	LvLK3D.ProcTexApplyColour(tempProcTestDistortY, 0, 1, 0)
+	LvLK3D.ProcTexWorleyMultiply(tempProcTestDistortY, 2.235, 3.246)
+	LvLK3D.ProcTexInvert(tempProcTestDistortY)
+	LvLK3D.ProcTexApplyColourMul(tempProcTestDistortY, 0, 1, 0)
+
+
+	local tempProcTestDistort = LvLK3D.ProcTexNewTemp(512, 512)
+	LvLK3D.ProcTexApplyColour(tempProcTestDistort, 0, 0, 0)
+	LvLK3D.ProcTexMergeAdd(tempProcTestDistort, tempProcTestDistortX)
+	LvLK3D.ProcTexMergeAdd(tempProcTestDistort, tempProcTestDistortY)
+
+	local tempProcTest = LvLK3D.ProcTexNewTemp(512, 512)
+	--LvLK3D.ProcTexApplyColour(tempProcTest, 1, 1, 1)
+	--LvLK3D.ProcTexApplyImage(tempProcTest, LvLK3D.GetTexture("happyPNGTest"))
+	--LvLK3D.ProcTexDistort(tempProcTest, tempProcTestMaskX, 0.1)
+	--LvLK3D.ProcTexMask(tempProcTest, tempProcTestMask, LvLK3D.GetTexture("happyPNGTest"))
+
+
+	LvLK3D.ProcTexApplyImage(tempProcTest, LvLK3D.GetTexture("happyPNGTest"))
+	LvLK3D.ProcTexDistort(tempProcTest, tempProcTestDistort, 0.05)
+	LvLK3D.ProcTexDeclareTexture("procTest", tempProcTest)
+
+
+	-- lets make some real textures
+	local procMarble = LvLK3D.ProcTexNewTemp(256, 256)
+	LvLK3D.ProcTexApplyColour(procMarble, 1, 1, 1)
+	LvLK3D.ProcTexSimplexMultiply(procMarble, 6, 6)
+	LvLK3D.ProcTexSimplexMultiply(procMarble, 14, 14)
+	LvLK3D.ProcTexSimplexMultiply(procMarble, 24, 24)
+
+	LvLK3D.ProcTexApplyColourAdd(procMarble, 0.1, 0.1, 0.1)
+	LvLK3D.ProcTexInvert(procMarble)
+
+	LvLK3D.ProcTexDeclareTexture("procMarble", procMarble)
+
+
+	local stonesSize = 8
+	local stonesDist = 0.6
+
+	local procPebbles = LvLK3D.ProcTexNewTemp(256, 256)
+	LvLK3D.ProcTexApplyColour(procPebbles, 1, 1, 1)
+	LvLK3D.ProcTexSimplexMultiply(procPebbles, 4, 4)
+	LvLK3D.ProcTexSimplexMultiply(procPebbles, 6, 6)
+	LvLK3D.ProcTexSimplexMultiply(procPebbles, 8, 8)
+	LvLK3D.ProcTexApplyColourAdd(procPebbles, 0.25, 0.25, 0.25)
+
+
+	local maskDistort = LvLK3D.ProcTexNewTemp(256, 256)
+	LvLK3D.ProcTexApplyColour(maskDistort, 1, 1, 1)
+	LvLK3D.ProcTexWorleyMultiplyNormal(maskDistort, stonesSize, stonesSize, stonesDist)
+	LvLK3D.ProcTexBlur(maskDistort, 8)
+	--LvLK3D.ProcTexInvert(maskDistort)
+
+	local maskStoneBorders = LvLK3D.ProcTexNewTemp(256, 256)
+	LvLK3D.ProcTexApplyColour(maskStoneBorders, 1, 1, 1)
+	LvLK3D.ProcTexWorleyMultiply(maskStoneBorders, stonesSize, stonesSize, stonesDist)
+	--LvLK3D.ProcTexInvert(procPebbles)
+	LvLK3D.ProcTexTreshold(maskStoneBorders, 0.6, 0.25)
+	LvLK3D.ProcTexApplyColourAdd(maskStoneBorders, 0.25, 0.25, 0.25)
+
+
+	local tempShine = LvLK3D.ProcTexNewTemp(256, 256)
+	LvLK3D.ProcTexApplyColour(tempShine, 1, 1, 1)
+	LvLK3D.ProcTexLightDot(tempShine, maskDistort, Vector(-0.75, -0.25, 1.75):GetNormalized())
+
+
+	LvLK3D.ProcTexDistort(procPebbles, maskDistort, -0.1)
+	LvLK3D.ProcTexMultiply(procPebbles, tempShine)
+
+	LvLK3D.ProcTexDeclareTexture("procPebbles", procPebbles)
+
 
 
 
@@ -54,29 +163,37 @@ function love.load()
 		LvLK3D.SetObjectFlag("cube1", "FULLBRIGHT", false)
 		LvLK3D.SetObjectScl("cube1", Vector(.5, .5, .5))
 		LvLK3D.UpdateObjectMesh("cube1")
-
 		LvLK3D.SetObjectShadow("cube1", true)
 
 		LvLK3D.AddObjectToUniv("plane_floor", "plane")
 		LvLK3D.SetObjectPos("plane_floor", Vector(0, -4, 0))
 		LvLK3D.SetObjectScl("plane_floor", Vector(16, 1, 16))
 		LvLK3D.SetObjectMat("plane_floor", "mandrill")
-
 		LvLK3D.SetObjectFlag("plane_floor", "SHADING", true)
 		LvLK3D.UpdateObjectMesh("plane_floor")
 
 
 
-		LvLK3D.AddObjectToUniv("lokamodel", "cube")
-		LvLK3D.SetObjectPos("lokamodel", Vector(0, -4, -2.75))
-		LvLK3D.SetObjectMat("lokamodel", "happyPNGTest")
-		LvLK3D.SetObjectFlag("lokamodel", "SHADING", true)
-		LvLK3D.SetObjectFlag("lokamodel", "SHADING_SMOOTH", false)
-		LvLK3D.SetObjectFlag("lokamodel", "NORM_INVERT", false)
-		LvLK3D.SetObjectFlag("lokamodel", "FULLBRIGHT", false)
-		LvLK3D.UpdateObjectMesh("lokamodel")
+		LvLK3D.AddObjectToUniv("cube_floor", "cube")
+		LvLK3D.SetObjectPos("cube_floor", Vector(0, -2, -2.75))
+		LvLK3D.SetObjectMat("cube_floor", "procMarble")
+		LvLK3D.SetObjectFlag("cube_floor", "SHADING", false)
+		LvLK3D.SetObjectFlag("cube_floor", "SHADING_SMOOTH", false)
+		LvLK3D.SetObjectFlag("cube_floor", "NORM_INVERT", false)
+		LvLK3D.SetObjectFlag("cube_floor", "FULLBRIGHT", true)
+		LvLK3D.UpdateObjectMesh("cube_floor")
+		LvLK3D.SetObjectShadow("cube_floor", true)
 
-		LvLK3D.SetObjectShadow("lokamodel", true)
+		LvLK3D.AddObjectToUniv("cube_floor2", "cube")
+		LvLK3D.SetObjectPos("cube_floor2", Vector(-2, -2, -2.75))
+		LvLK3D.SetObjectMat("cube_floor2", "procPebbles")
+		LvLK3D.SetObjectFlag("cube_floor2", "SHADING", false)
+		LvLK3D.SetObjectFlag("cube_floor2", "SHADING_SMOOTH", false)
+		LvLK3D.SetObjectFlag("cube_floor2", "NORM_INVERT", false)
+		LvLK3D.SetObjectFlag("cube_floor2", "FULLBRIGHT", true)
+		LvLK3D.UpdateObjectMesh("cube_floor2")
+		LvLK3D.SetObjectShadow("cube_floor2", true)
+
 
 
 		LvLK3D.AddObjectToUniv("train", "train")
