@@ -7,7 +7,7 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
     
     //float maxInv = 1 - maxDist;
     
-    //float distX = abs(texcolor.x - target);
+    //float distX = abs(target - texcolor.x);
     //float distNorm = distX / maxDist;
     //texcolor.x = min(distNorm, maxDist) / maxDist;
     //texcolor.yz = texcolor.xx;

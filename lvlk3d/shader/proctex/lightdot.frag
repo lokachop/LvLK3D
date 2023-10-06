@@ -4,6 +4,8 @@ uniform Image texA;
 uniform vec2 texASize;
 
 uniform vec3 sunDir;
+uniform float specMul;
+uniform float specConst;
 
 
 
@@ -25,11 +27,11 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
     vec3 viewDir = normalize(vec3(0, 0, 1));
     vec3 reflectDir = reflect(-sunDir, texNormal); 
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 4);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), specConst);
 
 
     texcolor.xyz *= dotVal;
-    texcolor.xyz += (4 * spec);
+    texcolor.xyz += (specMul * spec);
 
     return texcolor;
 }

@@ -69,5 +69,5 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
     // Show isolines
     // color -= step(.7,abs(sin(27.0*m_dist)))*.5;
 
-    return texcolor * vec4(finalNormal, 1.0);
+    return vec4(finalNormal, 1.0);
 }

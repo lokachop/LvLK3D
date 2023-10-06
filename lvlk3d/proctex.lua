@@ -91,11 +91,13 @@ local function applyShader(name, data)
 end
 
 procTex_newShader("worleyMultiply", LvLK3D.RelaPath .. "/shader/proctex/worley.frag")
-procTex_newShader("worleyMultiplyNormal", LvLK3D.RelaPath .. "/shader/proctex/worleynormal.frag")
+procTex_newShader("worleyNormal", LvLK3D.RelaPath .. "/shader/proctex/worleynormal.frag")
 
 procTex_newShader("invert", LvLK3D.RelaPath .. "/shader/proctex/invert.frag")
 procTex_newShader("clamp", LvLK3D.RelaPath .. "/shader/proctex/clamp.frag")
 procTex_newShader("treshold", LvLK3D.RelaPath .. "/shader/proctex/treshold.frag")
+procTex_newShader("normalify", LvLK3D.RelaPath .. "/shader/proctex/normalify.frag")
+
 procTex_newShader("simplexMultiply", LvLK3D.RelaPath .. "/shader/proctex/simplexmul.frag")
 procTex_newShader("simplexAdd", LvLK3D.RelaPath .. "/shader/proctex/simplexadd.frag")
 
@@ -181,9 +183,9 @@ function LvLK3D.ProcTexWorleyMultiply(canvas, sx, sy, minDist)
     popCanvas()
 end
 
-function LvLK3D.ProcTexWorleyMultiplyNormal(canvas, sx, sy, minDist)
+function LvLK3D.ProcTexWorleyNormal(canvas, sx, sy, minDist)
     pushCanvas(canvas)
-        applyShader("worleyMultiplyNormal", {
+        applyShader("worleyNormal", {
             ["minDist"] = minDist or 1,
             ["scale"] = {sx or 3, sy or 3},
         })
@@ -230,6 +232,12 @@ function LvLK3D.ProcTexTreshold(canvas, target, maxDist)
             ["target"] = target or 0.5,
             ["maxDist"] = maxDist or 0.2,
         })
+    popCanvas()
+end
+
+function LvLK3D.ProcTexNormalify(canvas)
+    pushCanvas(canvas)
+        applyShader("normalify", {})
     popCanvas()
 end
 
@@ -283,7 +291,7 @@ function LvLK3D.ProcTexMultiply(canvas, texA)
 end
 
 
-function LvLK3D.ProcTexLightDot(canvas, texA, sunDir)
+function LvLK3D.ProcTexLightDot(canvas, texA, sunDir, specMul, specConst)
     if not texA then
         return
     end
@@ -294,7 +302,9 @@ function LvLK3D.ProcTexLightDot(canvas, texA, sunDir)
         applyShader("lightdot", {
             ["texA"] = texA,
             ["texASize"] = {tAw, tAh},
-            ["sunDir"] = sunDir or {0.25, 0.5, -0.25};
+            ["sunDir"] = sunDir or {0.25, 0.5, -0.25},
+            ["specMul"] = specMul or 1,
+            ["specConst"] = specConst or 4,
         })
     popCanvas()
 end
