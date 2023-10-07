@@ -11,18 +11,18 @@ function love.load()
 
 
 
-	LvLK3D.NewTexturePPM("loka",       "textures/loka.ppm")
+	LvLK3D.NewTexturePNG("loka",       "textures/loka.png")
 
-	LvLK3D.NewTexturePPM("mandrill",   "textures/mandrill.ppm")
+	LvLK3D.NewTexturePNG("mandrill",   "textures/mandrill.png")
 	LvLK3D.SetTextureFilter("mandrill", "nearest", "nearest")
 
-	LvLK3D.NewTexturePPM("loka_sheet",         "textures/loka_sheet.ppm")
+	LvLK3D.NewTexturePNG("loka_sheet",         "textures/loka_sheet.png")
 	LvLK3D.SetTextureFilter("loka_sheet", "nearest", "nearest")
 
-	LvLK3D.NewTexturePPM("train_sheet",        "textures/train_sheet.ppm")
+	LvLK3D.NewTexturePNG("train_sheet",        "textures/train_sheet.png")
 	LvLK3D.SetTextureFilter("train_sheet", "nearest", "nearest")
 
-	LvLK3D.NewTexturePPM("traintrack_sheet",   "textures/traintrack_sheet.ppm")
+	LvLK3D.NewTexturePNG("traintrack_sheet",   "textures/traintrack_sheet.png")
 	LvLK3D.SetTextureFilter("traintrack_sheet", "nearest", "nearest")
 	LvLK3D.SetTextureWrap("traintrack_sheet", "repeat")
 
@@ -42,33 +42,24 @@ function love.load()
 
 
 	local stonesSize = 8
-	local stonesDist = 0.6
+	local stonesDist = 1
 	local procPebbles = LvLK3D.ProcTexNewTemp(256, 256)
 	LvLK3D.ProcTexApplyColour(procPebbles, 1, 1, 1)
 	LvLK3D.ProcTexSimplexMultiply(procPebbles, 4, 4)
 	LvLK3D.ProcTexSimplexMultiply(procPebbles, 6, 6)
 	LvLK3D.ProcTexSimplexMultiply(procPebbles, 8, 8)
 	LvLK3D.ProcTexApplyColourAdd(procPebbles, 0.25, 0.25, 0.25)
-
+	LvLK3D.ProcTexClamp(procPebbles, 0.25, 0.6)
 
 	local maskDistort = LvLK3D.ProcTexNewTemp(256, 256)
 	LvLK3D.ProcTexApplyColour(maskDistort, 1, 1, 1)
-	--LvLK3D.ProcTexWorleyMultiply(maskDistort, stonesSize, stonesSize, stonesDist)
-	--LvLK3D.ProcTexInvert(maskDistort)
-	--LvLK3D.ProcTexNormalify(maskDistort)
-
 	LvLK3D.ProcTexWorleyNormal(maskDistort, stonesSize, stonesSize, stonesDist)
 	LvLK3D.ProcTexBlur(maskDistort, 8, 6)
-	--LvLK3D.ProcTexInvert(maskDistort)
 
 	local maskStoneBorders = LvLK3D.ProcTexNewTemp(256, 256)
 	LvLK3D.ProcTexApplyColour(maskStoneBorders, 1, 1, 1)
 	LvLK3D.ProcTexWorleyMultiply(maskStoneBorders, stonesSize, stonesSize, stonesDist)
 	LvLK3D.ProcTexTreshold(maskStoneBorders, 1, 0.9)
-	--LvLK3D.ProcTexInvert(maskStoneBorders)
-
-	--LvLK3D.ProcTexApplyColourAdd(maskStoneBorders, 0.25, 0.25, 0.25)
-
 
 	local tempShine = LvLK3D.ProcTexNewTemp(256, 256)
 	LvLK3D.ProcTexApplyColour(tempShine, 1, 1, 1)
@@ -78,7 +69,6 @@ function love.load()
 	LvLK3D.ProcTexDistort(procPebbles, maskDistort, -0.15)
 	LvLK3D.ProcTexMultiply(procPebbles, tempShine)
 	LvLK3D.ProcTexMultiply(procPebbles, maskStoneBorders)
-
 	LvLK3D.ProcTexDeclareTexture("procPebbles", procPebbles)
 
 
@@ -87,13 +77,9 @@ function love.load()
 	LvLK3D.ProcTexSimplexMultiply(testNormalSpx, 6, 6)
 	LvLK3D.ProcTexNormalify(testNormalSpx)
 
-
-
-
 	local testLit = LvLK3D.ProcTexNewTemp(256, 256)
 	LvLK3D.ProcTexApplyColour(testLit, 0.25, 0.45, 0.85)
 	LvLK3D.ProcTexLightDot(testLit, testNormalSpx, Vector(-0.75, -0.25, 1.75):GetNormalized(), 0.5, 16)
-
 	LvLK3D.ProcTexDeclareTexture("testSpxNormal", testLit)
 
 
@@ -133,7 +119,13 @@ function love.load()
 		LvLK3D.SetObjectFlag("plane_floor", "SHADING", true)
 		LvLK3D.UpdateObjectMesh("plane_floor")
 
-
+		LvLK3D.AddObjectToUniv("lktest", "lokachop_sqr")
+		LvLK3D.SetObjectPos("lktest", Vector(0, -2, 0))
+		LvLK3D.SetObjectScl("lktest", Vector(1, 1, 1))
+		LvLK3D.SetObjectMat("lktest", "loka_sheet")
+		LvLK3D.SetObjectFlag("lktest", "SHADING", true)
+		LvLK3D.SetObjectFlag("lktest", "FULLBRIGHT", false)
+		LvLK3D.UpdateObjectMesh("lktest")
 
 		LvLK3D.AddObjectToUniv("cube_floor", "cube")
 		LvLK3D.SetObjectPos("cube_floor", Vector(0, -2, -2.75))
@@ -141,7 +133,7 @@ function love.load()
 		LvLK3D.SetObjectFlag("cube_floor", "SHADING", false)
 		LvLK3D.SetObjectFlag("cube_floor", "SHADING_SMOOTH", false)
 		LvLK3D.SetObjectFlag("cube_floor", "NORM_INVERT", false)
-		LvLK3D.SetObjectFlag("cube_floor", "FULLBRIGHT", true)
+		LvLK3D.SetObjectFlag("cube_floor", "FULLBRIGHT", false)
 		LvLK3D.UpdateObjectMesh("cube_floor")
 		LvLK3D.SetObjectShadow("cube_floor", true)
 
@@ -151,7 +143,7 @@ function love.load()
 		LvLK3D.SetObjectFlag("cube_floor2", "SHADING", false)
 		LvLK3D.SetObjectFlag("cube_floor2", "SHADING_SMOOTH", false)
 		LvLK3D.SetObjectFlag("cube_floor2", "NORM_INVERT", false)
-		LvLK3D.SetObjectFlag("cube_floor2", "FULLBRIGHT", true)
+		LvLK3D.SetObjectFlag("cube_floor2", "FULLBRIGHT", false)
 		LvLK3D.UpdateObjectMesh("cube_floor2")
 		LvLK3D.SetObjectShadow("cube_floor2", true)
 
@@ -161,17 +153,16 @@ function love.load()
 		LvLK3D.SetObjectFlag("cube_floor3", "SHADING", false)
 		LvLK3D.SetObjectFlag("cube_floor3", "SHADING_SMOOTH", false)
 		LvLK3D.SetObjectFlag("cube_floor3", "NORM_INVERT", false)
-		LvLK3D.SetObjectFlag("cube_floor3", "FULLBRIGHT", true)
+		LvLK3D.SetObjectFlag("cube_floor3", "FULLBRIGHT", false)
 		LvLK3D.UpdateObjectMesh("cube_floor3")
 		LvLK3D.SetObjectShadow("cube_floor3", true)
 
-
-
 		LvLK3D.AddObjectToUniv("train", "train")
 		LvLK3D.SetObjectPos("train", Vector(4, -2.05, -3))
-		LvLK3D.SetObjectMat("train", "white")
+		LvLK3D.SetObjectMat("train", "train_sheet")
 		LvLK3D.SetObjectFlag("train", "SHADING", true)
 		LvLK3D.SetObjectFlag("train", "SHADING_SMOOTH", false)
+		LvLK3D.SetObjectFlag("train", "FULLBRIGHT", false)
 		LvLK3D.UpdateObjectMesh("train")
 		LvLK3D.SetObjectShadow("train", true)
 

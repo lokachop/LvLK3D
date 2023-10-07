@@ -241,6 +241,16 @@ function LvLK3D.ProcTexNormalify(canvas)
     popCanvas()
 end
 
+function LvLK3D.ProcTexClamp(canvas, min, max)
+    pushCanvas(canvas)
+        applyShader("clamp", {
+            ["minVal"] = min or 0,
+            ["maxVal"] = max or 1,
+        })
+    popCanvas()
+end
+
+
 function LvLK3D.ProcTexMask(canvas, mask, texA)
     if (not texA) or (not mask) then
         return
