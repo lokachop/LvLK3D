@@ -84,26 +84,56 @@ function love.load()
 
 
 
+	local textureID_0 = LvLK3D.ProcTexNewTemp(256, 256)
+	LvLK3D.ProcTexApplyColour(textureID_0, 255 / 255, 255 / 255, 255 / 255)
+	LvLK3D.ProcTexSimplexMultiply(textureID_0, 3, 3, 0, 0)
+	LvLK3D.ProcTexSimplexMultiply(textureID_0, 6, 6, 0, 0)
+	local textureID_1 = LvLK3D.ProcTexNewTemp(256, 256)
+	LvLK3D.ProcTexApplyColour(textureID_1, 255 / 255, 255 / 255, 255 / 255)
+	LvLK3D.ProcTexWorleyNormal(textureID_1, 3, 3, 0.5)
+	LvLK3D.ProcTexBlur(textureID_1, 8, 3, 16)
+	LvLK3D.ProcTexDistort(textureID_0, textureID_1, 0.05)
+	LvLK3D.ProcTexDeclareTexture("The_name", textureID_0)
+
+	local textureID_0 = LvLK3D.ProcTexNewTemp(256, 256)
+	LvLK3D.ProcTexApplyColour(textureID_0, 255 / 255, 255 / 255, 255 / 255)
+	LvLK3D.ProcTexWorleyMultiply(textureID_0, 6, 6, 1)
+	LvLK3D.ProcTexInvert(textureID_0)
+	local textureID_1 = LvLK3D.ProcTexNewTemp(256, 256)
+	LvLK3D.ProcTexWorleyNormal(textureID_1, 6, 6, 1)
+	LvLK3D.ProcTexInvert(textureID_1)
+	LvLK3D.ProcTexDistort(textureID_0, textureID_1, 0.05)
+	LvLK3D.ProcTexDeclareTexture("none", textureID_0)
+	local textureID_2 = LvLK3D.ProcTexNewTemp(256, 256)
+	LvLK3D.ProcTexApplyColour(textureID_2, 255 / 255, 255 / 255, 255 / 255)
+	LvLK3D.ProcTexWorleyMultiply(textureID_2, 6, 6, 1)
+	LvLK3D.ProcTexInvert(textureID_2)
+	local textureID_3 = LvLK3D.ProcTexNewTemp(256, 256)
+	LvLK3D.ProcTexWorleyNormal(textureID_3, 6, 6, 1)
+	LvLK3D.ProcTexInvert(textureID_3)
+	LvLK3D.ProcTexDistort(textureID_2, textureID_3, 0.05)
+	LvLK3D.ProcTexDeclareTexture("bad_nouise", textureID_2)
+
 
 
 	LvLK3D.PushUniverse(UnivTest)
 		LvLK3D.SetSunLighting(false) -- dont do sun lighting
 		LvLK3D.SetSunCol({1, 1, 1}) -- set col to weird yellow
+		LvLK3D.SetSunDir(Vector(0.25, -1, -0.5):GetNormalized())
 		--LvLK3D.SetAmbientCol({1 / 10, 1 / 10, 1 / 10}) -- ambient to darker weird yellow
 
 
 
 
-		LvLK3D.AddLightToUniv("LightOne", Vector(0, 3, 0), 2, {0.25, 0.25, 1})
-		LvLK3D.AddLightToUniv("LightTwo", Vector(4, 3, 0), 2, {0.25, 1, 0.25})
-		LvLK3D.AddLightToUniv("LightThree", Vector(4, 3, 0), 2, {1, 0.25, 0.25})
+		LvLK3D.AddLightToUniv("LightOne", Vector(0, 3, 2), 4, {0.25, 0.25, 1})
+		LvLK3D.AddLightToUniv("LightTwo", Vector(2, 3, -2), 4, {0.25, 1, 0.25})
+		LvLK3D.AddLightToUniv("LightThree", Vector(-2, 3, -2), 4, {1, 0.25, 0.25})
 
 
 
 		LvLK3D.AddObjectToUniv("cube1", "cube")
 		LvLK3D.SetObjectPos("cube1", Vector(0, 0, 0))
 		LvLK3D.SetObjectMat("cube1", "happyPNGTest")
-
 		LvLK3D.SetObjectFlag("cube1", "SHADING", true)
 		LvLK3D.SetObjectFlag("cube1", "SHADING_SMOOTH", false)
 		LvLK3D.SetObjectFlag("cube1", "NORM_INVERT", false)
@@ -111,6 +141,24 @@ function love.load()
 		LvLK3D.SetObjectScl("cube1", Vector(.5, .5, .5))
 		LvLK3D.UpdateObjectMesh("cube1")
 		LvLK3D.SetObjectShadow("cube1", true)
+
+
+		LvLK3D.AddObjectToUniv("cube_center", "cube")
+		LvLK3D.SetObjectPos("cube_center", Vector(-2, 0, 0))
+		LvLK3D.SetObjectMat("cube_center", "happyPNGTest")
+		LvLK3D.SetObjectFlag("cube_center", "SHADING", true)
+		LvLK3D.UpdateObjectMesh("cube_center")
+		LvLK3D.SetObjectShadow("cube_center", true)
+
+		LvLK3D.AddObjectToUniv("cube_tr", "cube")
+		LvLK3D.SetObjectPos("cube_tr", Vector(0, 0, 0))
+		LvLK3D.SetObjectMat("cube_tr", "happyPNGTest")
+		LvLK3D.SetObjectFlag("cube_tr", "SHADING", true)
+		LvLK3D.SetObjectScl("cube_tr", Vector(.1, .1, .1))
+		LvLK3D.UpdateObjectMesh("cube_tr")
+		LvLK3D.SetObjectShadow("cube_tr", true)
+
+
 
 		LvLK3D.AddObjectToUniv("plane_floor", "plane")
 		LvLK3D.SetObjectPos("plane_floor", Vector(0, -4, 0))
@@ -126,6 +174,7 @@ function love.load()
 		LvLK3D.SetObjectFlag("lktest", "SHADING", true)
 		LvLK3D.SetObjectFlag("lktest", "FULLBRIGHT", false)
 		LvLK3D.UpdateObjectMesh("lktest")
+		--LvLK3D.SetObjectShadow("lktest", true)
 
 		LvLK3D.AddObjectToUniv("cube_floor", "cube")
 		LvLK3D.SetObjectPos("cube_floor", Vector(0, -2, -2.75))
@@ -149,7 +198,7 @@ function love.load()
 
 		LvLK3D.AddObjectToUniv("cube_floor3", "cube")
 		LvLK3D.SetObjectPos("cube_floor3", Vector(-4, -2, -2.75))
-		LvLK3D.SetObjectMat("cube_floor3", "testSpxNormal")
+		LvLK3D.SetObjectMat("cube_floor3", "bad_nouise")
 		LvLK3D.SetObjectFlag("cube_floor3", "SHADING", false)
 		LvLK3D.SetObjectFlag("cube_floor3", "SHADING_SMOOTH", false)
 		LvLK3D.SetObjectFlag("cube_floor3", "NORM_INVERT", false)
@@ -161,7 +210,7 @@ function love.load()
 		LvLK3D.SetObjectPos("train", Vector(4, -2.05, -3))
 		LvLK3D.SetObjectMat("train", "train_sheet")
 		LvLK3D.SetObjectFlag("train", "SHADING", true)
-		LvLK3D.SetObjectFlag("train", "SHADING_SMOOTH", false)
+		LvLK3D.SetObjectFlag("train", "SHADING_SMOOTH", true)
 		LvLK3D.SetObjectFlag("train", "FULLBRIGHT", false)
 		LvLK3D.UpdateObjectMesh("train")
 		LvLK3D.SetObjectShadow("train", true)
@@ -201,6 +250,9 @@ function love.update(dt)
 	LvLK3D.MouseCamThink(dt)
 
 	LvLK3D.PushUniverse(UnivTest)
+		LvLK3D.TraceTest()
+
+
 		LvLK3D.SetObjectAng("cube1", Angle(CurTime * 24, CurTime * 32, 0))
 		LvLK3D.SetObjectPos("cube1", Vector(math.sin(CurTime * .75) * 2.65, 0, math.cos(CurTime * .4532) * 2.5))
 
@@ -208,9 +260,9 @@ function love.update(dt)
 
 
 
-		updateLightAndExShadow("LightOne", Vector(math.cos(CurTime * .65) * 5.6546, 3, math.sin(CurTime * .7645767) * 6.523))
-		updateLightAndExShadow("LightTwo", Vector(math.cos(CurTime * 1.85) * 8.6546, math.sin(CurTime * 1.24) + 3, math.sin(CurTime * 1.2645767) * 10.523))
-		updateLightAndExShadow("LightThree", Vector(math.cos(CurTime * 0.125) * 12.6546, (math.sin(CurTime * 0.62) * 2) + 3, math.sin(CurTime * 0.25645767) * 10.523))
+		--updateLightAndExShadow("LightOne", Vector(math.cos(CurTime * .65) * 5.6546, 3, math.sin(CurTime * .7645767) * 6.523))
+		--updateLightAndExShadow("LightTwo", Vector(math.cos(CurTime * 1.85) * 8.6546, math.sin(CurTime * 1.24) + 3, math.sin(CurTime * 1.2645767) * 10.523))
+		--updateLightAndExShadow("LightThree", Vector(math.cos(CurTime * 0.125) * 12.6546, (math.sin(CurTime * 0.62) * 2) + 3, math.sin(CurTime * 0.25645767) * 10.523))
 	LvLK3D.PopUniverse()
 end
 
