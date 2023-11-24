@@ -11,7 +11,7 @@ uniform bool capFlip;
 
 
 vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
-    bool face = normInvert ? !gl_FrontFacing : gl_FrontFacing;
+    bool face = normInvert ? gl_FrontFacing : !gl_FrontFacing;
     if(face) {
         discard;
     }

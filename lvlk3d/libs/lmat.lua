@@ -211,10 +211,10 @@ local mat_meta = {
         return Vector(x[1], x[2], x[3])
     end,
     ["Up"] = function(x)
-        return Vector(-x[5], -x[6], -x[7])
+        return Vector(x[5], x[6], x[7])
     end,
     ["Forward"] = function(x)
-        return Vector(x[9], x[10], x[11])
+        return -Vector(x[9], x[10], x[11])
     end,
 
     -- y is vec

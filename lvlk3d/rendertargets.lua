@@ -68,6 +68,12 @@ function LvLK3D.RenderRTFullScreen(rt)
     local rtW, rtH = currRT:getDimensions()
     local w, h = love.graphics.getDimensions()
 
+    local curr = love.graphics.getCanvas()
+    love.graphics.setCanvas(currRT)
+        LvLK3D.ApplyPPEffects(currRT)
+    love.graphics.setCanvas(curr)
+
+
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.draw(currRT, 0, 0, 0, w / rtW, h / rtH)

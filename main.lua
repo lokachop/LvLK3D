@@ -1,6 +1,6 @@
 LvLK3D = LvLK3D or {}
 function love.load()
-	love.filesystem.load("/lvlk3d/lvlk3d.lua")()
+	require("lvlk3d.lvlk3d")
 	CurTime = 0
 
 
@@ -142,21 +142,23 @@ function love.load()
 		LvLK3D.UpdateObjectMesh("cube1")
 		LvLK3D.SetObjectShadow("cube1", true)
 
-
-		LvLK3D.AddObjectToUniv("cube_center", "cube")
-		LvLK3D.SetObjectPos("cube_center", Vector(-2, 0, 0))
-		LvLK3D.SetObjectMat("cube_center", "happyPNGTest")
-		LvLK3D.SetObjectFlag("cube_center", "SHADING", true)
-		LvLK3D.UpdateObjectMesh("cube_center")
-		LvLK3D.SetObjectShadow("cube_center", true)
-
 		LvLK3D.AddObjectToUniv("cube_tr", "cube")
 		LvLK3D.SetObjectPos("cube_tr", Vector(0, 0, 0))
 		LvLK3D.SetObjectMat("cube_tr", "happyPNGTest")
 		LvLK3D.SetObjectFlag("cube_tr", "SHADING", true)
+		LvLK3D.SetObjectFlag("cube_tr", "NO_TRACE", true)
 		LvLK3D.SetObjectScl("cube_tr", Vector(.1, .1, .1))
 		LvLK3D.UpdateObjectMesh("cube_tr")
 		LvLK3D.SetObjectShadow("cube_tr", true)
+
+		LvLK3D.AddObjectToUniv("cube_tr_dir", "cube")
+		LvLK3D.SetObjectPos("cube_tr_dir", Vector(0, 0, 0))
+		LvLK3D.SetObjectMat("cube_tr_dir", "happyPNGTest")
+		LvLK3D.SetObjectFlag("cube_tr_dir", "SHADING", true)
+		LvLK3D.SetObjectFlag("cube_tr_dir", "NO_TRACE", true)
+		LvLK3D.SetObjectScl("cube_tr_dir", Vector(.1, .1, .1))
+		LvLK3D.UpdateObjectMesh("cube_tr_dir")
+		LvLK3D.SetObjectShadow("cube_tr_dir", true)
 
 
 
@@ -168,7 +170,7 @@ function love.load()
 		LvLK3D.UpdateObjectMesh("plane_floor")
 
 		LvLK3D.AddObjectToUniv("lktest", "lokachop_sqr")
-		LvLK3D.SetObjectPos("lktest", Vector(0, -2, 0))
+		LvLK3D.SetObjectPos("lktest", Vector(0, 0, 0))
 		LvLK3D.SetObjectScl("lktest", Vector(1, 1, 1))
 		LvLK3D.SetObjectMat("lktest", "loka_sheet")
 		LvLK3D.SetObjectFlag("lktest", "SHADING", true)
@@ -186,26 +188,6 @@ function love.load()
 		LvLK3D.UpdateObjectMesh("cube_floor")
 		LvLK3D.SetObjectShadow("cube_floor", true)
 
-		LvLK3D.AddObjectToUniv("cube_floor2", "cube")
-		LvLK3D.SetObjectPos("cube_floor2", Vector(-2, -2, -2.75))
-		LvLK3D.SetObjectMat("cube_floor2", "procPebbles")
-		LvLK3D.SetObjectFlag("cube_floor2", "SHADING", false)
-		LvLK3D.SetObjectFlag("cube_floor2", "SHADING_SMOOTH", false)
-		LvLK3D.SetObjectFlag("cube_floor2", "NORM_INVERT", false)
-		LvLK3D.SetObjectFlag("cube_floor2", "FULLBRIGHT", false)
-		LvLK3D.UpdateObjectMesh("cube_floor2")
-		LvLK3D.SetObjectShadow("cube_floor2", true)
-
-		LvLK3D.AddObjectToUniv("cube_floor3", "cube")
-		LvLK3D.SetObjectPos("cube_floor3", Vector(-4, -2, -2.75))
-		LvLK3D.SetObjectMat("cube_floor3", "bad_nouise")
-		LvLK3D.SetObjectFlag("cube_floor3", "SHADING", false)
-		LvLK3D.SetObjectFlag("cube_floor3", "SHADING_SMOOTH", false)
-		LvLK3D.SetObjectFlag("cube_floor3", "NORM_INVERT", false)
-		LvLK3D.SetObjectFlag("cube_floor3", "FULLBRIGHT", false)
-		LvLK3D.UpdateObjectMesh("cube_floor3")
-		LvLK3D.SetObjectShadow("cube_floor3", true)
-
 		LvLK3D.AddObjectToUniv("train", "train")
 		LvLK3D.SetObjectPos("train", Vector(4, -2.05, -3))
 		LvLK3D.SetObjectMat("train", "train_sheet")
@@ -215,6 +197,41 @@ function love.load()
 		LvLK3D.UpdateObjectMesh("train")
 		LvLK3D.SetObjectShadow("train", true)
 
+		LvLK3D.AddObjectToUniv("cube_source_dynamic", "cube")
+		LvLK3D.SetObjectPos("cube_source_dynamic", Vector(0, 0, 16))
+		LvLK3D.SetObjectScl("cube_source_dynamic", Vector(0.5, 0.5, 0.5))
+		LvLK3D.SetObjectMat("cube_source_dynamic", "The_name")
+		LvLK3D.SetObjectFlag("cube_source_dynamic", "SHADING", false)
+		LvLK3D.SetObjectFlag("cube_source_dynamic", "SHADING_SMOOTH", false)
+		LvLK3D.SetObjectFlag("cube_source_dynamic", "NORM_INVERT", false)
+		LvLK3D.SetObjectFlag("cube_source_dynamic", "FULLBRIGHT", false)
+		LvLK3D.UpdateObjectMesh("cube_source_dynamic")
+		LvLK3D.SetObjectShadow("cube_source_dynamic", true)
+
+
+
+		LvLK3D.AddObjectToUniv("cube_room", "cube")
+		LvLK3D.SetObjectPos("cube_room", Vector(0, 0, -16))
+		LvLK3D.SetObjectScl("cube_room", Vector(4.5, 4.5, 4.5))
+		LvLK3D.SetObjectMat("cube_room", "procMarble")
+		LvLK3D.SetObjectFlag("cube_room", "SHADING", false)
+		LvLK3D.SetObjectFlag("cube_room", "SHADING_SMOOTH", false)
+		LvLK3D.SetObjectFlag("cube_room", "NORM_INVERT", true)
+		LvLK3D.SetObjectFlag("cube_room", "FULLBRIGHT", false)
+		LvLK3D.UpdateObjectMesh("cube_room")
+		--LvLK3D.SetObjectShadow("cube_floor", true)
+
+
+
+		LvLK3D.AddObjectToUniv("cube_room2", "cube")
+		LvLK3D.SetObjectPos("cube_room2", Vector(16, 0, 0))
+		LvLK3D.SetObjectScl("cube_room2", Vector(2.5, 2.5, 2.5))
+		LvLK3D.SetObjectMat("cube_room2", "procMarble")
+		LvLK3D.SetObjectFlag("cube_room2", "SHADING", false)
+		LvLK3D.SetObjectFlag("cube_room2", "SHADING_SMOOTH", false)
+		LvLK3D.SetObjectFlag("cube_room2", "NORM_INVERT", true)
+		LvLK3D.SetObjectFlag("cube_room2", "FULLBRIGHT", false)
+		LvLK3D.UpdateObjectMesh("cube_room2")
 
 
 		--LvLK3D.AddObjectToUniv("rail", "traintrack")
@@ -235,6 +252,94 @@ function love.load()
 		end
 	LvLK3D.PopUniverse()
 
+
+
+
+	LvLK3D.AddNewSoundEffect("reverbLarge", {
+		["type"] = "reverb",
+		["gain"] = 0.32,
+		["highgain"] = 0.89,
+		["density"] = 0.4,
+		["diffusion"] = 0.03,
+		["decaytime"] = 1.49 ,
+		["decayhighratio"] = 0.83,
+		["earlygain"] = 0.05,
+		["earlydelay"] = 0.05,
+		["lategain"] = 1.26,
+		["latedelay"] = 0.011,
+		["roomrolloff"] = 0,
+		["airabsorption"] = 0.994,
+		["highlimit"] = true
+	})
+
+
+	LvLK3D.AddNewSoundEffect("reverbHuge", {
+		["type"] = "reverb",
+		["gain"] = 1,
+		["highgain"] = 0.5,
+		["density"] = 0.3,
+		["diffusion"] = 0.03,
+		["decaytime"] = 4.49,
+		["decayhighratio"] = 0.83,
+		["earlygain"] = 0.05,
+		["earlydelay"] = 0.05,
+		["lategain"] = 1.26,
+		["latedelay"] = 0.011,
+		["roomrolloff"] = 0,
+		["airabsorption"] = 0.994,
+		["highlimit"] = true
+	})
+
+	LvLK3D.AddNewSoundEffect("reverbSmall", {
+		["type"] = "reverb",
+		["gain"] = 1,
+		["highgain"] = 0.4,
+		["density"] = 1,
+		["diffusion"] = 0.1,
+		["decaytime"] = 0.20,
+		["decayhighratio"] = 0.83,
+		["earlygain"] = 1,
+		["earlydelay"] = 0.1,
+		["lategain"] = 0,
+		["latedelay"] = 0.011,
+		["roomrolloff"] = 10,
+		["airabsorption"] = 0.994,
+		["highlimit"] = true
+	})
+
+	LvLK3D.AddNewSoundEffect("echoTest", {
+		["type"] = "echo",
+		["delay"] = 0.025,
+		["tapdelay"] = 0.025,
+		["damping"] = 0.5,
+		["feedback"] = 0.5,
+		["spread"] = -1,
+	})
+
+	local source = LvLK3D.PlaySound3D("sounds/ic2.wav", Vector(-4, 0, 0), 1, 1)
+	source:setLooping(true)
+	source:play()
+
+
+	local source2 = LvLK3D.PlaySound3D("sounds/Enter the Maze.wav", Vector(16, 0, 0), 1, 3)
+	LvLK3D.SetSourceEffect(source2, "reverbSmall", true)
+	LvLK3D.SetSourceFilter(source2, {
+		["volume"] = 0,
+		["type"] = "lowpass"
+	})
+	source2:setLooping(true)
+	source2:play()
+
+	Source3_Dynamic = LvLK3D.PlaySound3D("sounds/Space Jazz.wav", Vector(0, 0, -16), 1, 3)
+	LvLK3D.SetSourceEffect(Source3_Dynamic, "reverbLarge", true)
+	--[[
+	LvLK3D.SetSourceFilter(Source3_Dynamic, {
+		["volume"] = 0,
+		["type"] = "lowpass"
+	})
+	]]--
+	Source3_Dynamic:setLooping(true)
+	Source3_Dynamic:play()
 end
 
 
@@ -243,14 +348,29 @@ local function updateLightAndExShadow(id, pos)
 	LvLK3D.SetObjectPos("lightID " .. id, pos)
 end
 
+local function reflect(I, N)
+	return I - 2 * N:Dot(I) * N
+end
+
 function love.update(dt)
+	local fow = LvLK3D.CamMatrix_Rot:Forward()
+	local up = LvLK3D.CamMatrix_Rot:Up()
+	local right = LvLK3D.CamMatrix_Rot:Right()
+
+
 	CurTime = CurTime + dt
 	--LvLK3D.NoclipCam(dt)
 
 	LvLK3D.MouseCamThink(dt)
 
 	LvLK3D.PushUniverse(UnivTest)
-		LvLK3D.TraceTest()
+		local dir = LvLK3D.CamMatrix_Rot:Forward()
+
+		local hit, pos, norm, dist = LvLK3D.TraceRay(LvLK3D.CamPos, dir, 8)
+		--LvLK3D.SetObjectPos("cube_tr", pos + (norm * .1))
+
+		local hit2, pos2, norm2, dist2 = LvLK3D.TraceRay(pos + (norm * .1), norm * .25, 8)
+		--LvLK3D.SetObjectPos("cube_tr_dir", pos2 + (norm2 * .1))
 
 
 		LvLK3D.SetObjectAng("cube1", Angle(CurTime * 24, CurTime * 32, 0))
@@ -258,11 +378,14 @@ function love.update(dt)
 
 
 
-
-
+		local pCube = Vector(math.sin(CurTime * 1.75) * 2.65, 0, (math.cos(CurTime * 1.4532) * 2.5) - 16)
+		LvLK3D.SetObjectPos("cube_source_dynamic", pCube)
+		LvLK3D.SetSourcePosition(Source3_Dynamic, pCube)
 		--updateLightAndExShadow("LightOne", Vector(math.cos(CurTime * .65) * 5.6546, 3, math.sin(CurTime * .7645767) * 6.523))
 		--updateLightAndExShadow("LightTwo", Vector(math.cos(CurTime * 1.85) * 8.6546, math.sin(CurTime * 1.24) + 3, math.sin(CurTime * 1.2645767) * 10.523))
 		--updateLightAndExShadow("LightThree", Vector(math.cos(CurTime * 0.125) * 12.6546, (math.sin(CurTime * 0.62) * 2) + 3, math.sin(CurTime * 0.25645767) * 10.523))
+
+		LvLK3D.SoundThink()
 	LvLK3D.PopUniverse()
 end
 
@@ -274,21 +397,24 @@ function love.mousemoved(mx, my, dx, dy)
 	LvLK3D.MouseCamUpdate(dx, dy)
 end
 
+
 function love.draw()
 	love.graphics.clear()
 
 	LvLK3D.PushUniverse(UnivTest)
 	LvLK3D.PushRenderTarget(RTTest)
 		LvLK3D.Clear(.1, .2, .3)
-		--LvLK3D.ClearDepth()
 
 		LvLK3D.RenderActiveUniverse()
 
 	LvLK3D.PopRenderTarget()
 	LvLK3D.PopUniverse()
 
-
+	--LvLK3D.PushPPEffect("cbBlur", {
+	--	["blendFactor"] = 0.9
+	--})
+	--LvLK3D.PushPPEffect("frameAccum", {
+	--	["blendFactor"] = 0.97
+	--})
 	LvLK3D.RenderRTFullScreen(RTTest)
-
-
 end

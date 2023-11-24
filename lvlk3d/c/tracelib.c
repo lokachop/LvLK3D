@@ -2,6 +2,11 @@
 #include <stdbool.h>
 #include <math.h>
 
+#define MAX_MODELS 4096
+#define MAX_VERTS 2097152
+#define MAX_FACES 1048576
+
+
 #define DBL_EPSILON 2.2204460492503131e-16
 
 typedef struct Vector {
@@ -15,6 +20,54 @@ typedef struct TraceResult {
 	float dist;
     Vector pos;
 } TraceResult;
+
+typedef struct UV {
+	float u;
+	float v;
+} UV;
+
+typedef struct Face {
+	Vector normal;
+	unsigned long long v1i;
+	unsigned long long v2i;
+	unsigned long long v3i;
+
+	unsigned long long v1ui;
+	unsigned long long v2ui;
+	unsigned long long v3ui;
+} Face;
+
+// later later
+typedef struct Model {
+	unsigned long long vertCount;
+	unsigned long long faceCount;
+
+	Vector vertList[MAX_VERTS];
+	Face faceList[MAX_FACES];
+
+} Model;
+
+
+typedef struct LvLK3DModelData {
+	Vector verts[MAX_VERTS];
+	Vector normals[MAX_VERTS];
+	UV uvs[MAX_VERTS];
+	Face faceInd[MAX_FACES];
+} LvLK3DModelData;
+
+
+Model mdlList[MAX_MODELS];
+
+
+/*
+unsigned int declare_model(unsigned int index, unsigned long long vertCount, unsigned long long faceCount, Vector vertList[MAX_VERTS]) {
+	Model newMdl;
+	newMdl.vertCount = vertCount;
+	newMdl.faceCount = faceCount;
+
+	mdlList[index] = 
+};
+*/
 
 
 void vector_copy(Vector* result, Vector* const cpy) {
@@ -83,9 +136,9 @@ void vector_print(Vector* const vec) {
 
 // https://github.com/excessive/cpml/blob/master/modules/intersect.lua
 TraceResult rayIntersectsTriangle(Vector rayPos, Vector rayDir, Vector v1, Vector v2, Vector v3, bool backface_cull) {
-	vector_neg(&v1);
-	vector_neg(&v2);
-	vector_neg(&v3);
+	//vector_neg(&v1);
+	//vector_neg(&v2);
+	//vector_neg(&v3);
 
 
     Vector e1;
@@ -154,7 +207,7 @@ TraceResult rayIntersectsTriangle(Vector rayPos, Vector rayDir, Vector v1, Vecto
 		vector_mul_f(&hp, t); // rayDir * t
 		vector_add(&hp, &rayPos);
 
-		vector_neg(&hp);
+		//vector_neg(&hp);
 		out.pos = hp;
 		out.dist = t;
 		out.hit = true;

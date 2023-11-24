@@ -24,7 +24,7 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
         final *= vec4(dotMul, dotMul, dotMul, 1.0);
     }
 
-    bool face = normInvert ? !gl_FrontFacing : gl_FrontFacing;
+    bool face = normInvert ? gl_FrontFacing : !gl_FrontFacing;
     if(face) {
         discard;
     }

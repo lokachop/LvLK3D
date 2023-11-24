@@ -61,7 +61,7 @@ vec4 position(mat4 transformProjection, vec4 vertexPosition) {
 
     // canvas is always on
     screenPosition.y *= -1.0;
-    screenPosition.x *= -1.0;
+    //screenPosition.x *= -1.0;
 
 
 

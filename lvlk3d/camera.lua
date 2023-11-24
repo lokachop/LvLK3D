@@ -46,7 +46,7 @@ end
 function LvLK3D.SetCamPos(pos)
 	LvLK3D.CamPos = pos or LvLK3D.CamPos
 
-	LvLK3D.CamMatrix_Trans:SetTranslation(LvLK3D.CamPos)
+	LvLK3D.CamMatrix_Trans:SetTranslation(-LvLK3D.CamPos)
 end
 
 function LvLK3D.SetCamAng(ang)
@@ -60,7 +60,7 @@ function LvLK3D.SetCamPosAng(pos, ang)
 	LvLK3D.CamAng = ang or LvLK3D.CamAng
 
 	LvLK3D.CamMatrix_Rot:SetAngles(LvLK3D.CamAng)
-	LvLK3D.CamMatrix_Trans:SetTranslation(LvLK3D.CamPos)
+	LvLK3D.CamMatrix_Trans:SetTranslation(-LvLK3D.CamPos)
 end
 
 function LvLK3D.RotateCam(ang)
@@ -97,11 +97,11 @@ function LvLK3D.NoclipCam(dt)
 	end
 
 	if love.keyboard.isDown("a") then
-		LvLK3D.SetCamPos(LvLK3D.CamPos - rig)
+		LvLK3D.SetCamPos(LvLK3D.CamPos + rig)
 	end
 
 	if love.keyboard.isDown("d") then
-		LvLK3D.SetCamPos(LvLK3D.CamPos + rig)
+		LvLK3D.SetCamPos(LvLK3D.CamPos - rig)
 	end
 
 	if love.keyboard.isDown("space") then
@@ -245,11 +245,11 @@ function LvLK3D.MouseCamThink(dt)
 	end
 
 	if love.keyboard.isDown("q") then
-		LvLK3D.RotateCam(Angle(0, 0, -128 * dt))
+		LvLK3D.RotateCam(Angle(0, 0, 128 * dt))
 	end
 
 	if love.keyboard.isDown("e") then
-		LvLK3D.RotateCam(Angle(0, 0, 128 * dt))
+		LvLK3D.RotateCam(Angle(0, 0, -128 * dt))
 	end
 
 	LvLK3D.SetCamPos(LvLK3D.CamPos + LvLK3D.CamVel * dt)
@@ -261,7 +261,7 @@ function LvLK3D.MouseCamUpdate(mx, my)
 		return
 	end
 
-	local mxReal = mx / 2
+	local mxReal = -mx / 2
 	local myReal = -my / 2
 
 	LvLK3D.RotateCam(Angle(myReal, mxReal, 0))

@@ -179,7 +179,7 @@ local v_meta = {
         _rotMatrixCalc:Identity()
         _rotMatrixCalc:SetAngles(x)
 
-        return LVEC.Vector(-_rotMatrixCalc[5], -_rotMatrixCalc[6], -_rotMatrixCalc[7])
+        return LVEC.Vector(_rotMatrixCalc[5], _rotMatrixCalc[6], _rotMatrixCalc[7])
     end,
     ["Forward"] = function(x)
         _rotMatrixCalc:Identity()
