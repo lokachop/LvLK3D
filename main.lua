@@ -118,10 +118,10 @@ function love.load()
 
 	LvLK3D.PushUniverse(UnivTest)
 		LvLK3D.SetSunLighting(false) -- dont do sun lighting
-		LvLK3D.SetSunCol({1, 1, 1}) -- set col to weird yellow
+		LvLK3D.SetSunCol({0.5, 0.5, 0.5}) -- set col to weird yellow
 		LvLK3D.SetSunDir(Vector(0.25, -1, -0.5):GetNormalized())
-		--LvLK3D.SetAmbientCol({1 / 10, 1 / 10, 1 / 10}) -- ambient to darker weird yellow
-
+		--LvLK3D.SetAmbientCol({.1, .1, .1}) -- ambient to darker weird yellow
+		LvLK3D.SetAmbientCol({0, 0, 0})
 
 
 
@@ -219,7 +219,6 @@ function love.load()
 		LvLK3D.SetObjectFlag("cube_room", "NORM_INVERT", true)
 		LvLK3D.SetObjectFlag("cube_room", "FULLBRIGHT", false)
 		LvLK3D.UpdateObjectMesh("cube_room")
-		--LvLK3D.SetObjectShadow("cube_floor", true)
 
 
 
@@ -232,6 +231,17 @@ function love.load()
 		LvLK3D.SetObjectFlag("cube_room2", "NORM_INVERT", true)
 		LvLK3D.SetObjectFlag("cube_room2", "FULLBRIGHT", false)
 		LvLK3D.UpdateObjectMesh("cube_room2")
+
+
+		LvLK3D.AddObjectToUniv("cube_room3", "cube")
+		LvLK3D.SetObjectPos("cube_room3", Vector(-32, 0, 0))
+		LvLK3D.SetObjectScl("cube_room3", Vector(8.5, 8.5, 8.5))
+		LvLK3D.SetObjectMat("cube_room3", "bad_nouise")
+		LvLK3D.SetObjectFlag("cube_room3", "SHADING", false)
+		LvLK3D.SetObjectFlag("cube_room3", "SHADING_SMOOTH", false)
+		LvLK3D.SetObjectFlag("cube_room3", "NORM_INVERT", true)
+		LvLK3D.SetObjectFlag("cube_room3", "FULLBRIGHT", false)
+		LvLK3D.UpdateObjectMesh("cube_room3")
 
 
 		--LvLK3D.AddObjectToUniv("rail", "traintrack")
@@ -257,17 +267,17 @@ function love.load()
 
 	LvLK3D.AddNewSoundEffect("reverbLarge", {
 		["type"] = "reverb",
-		["gain"] = 0.32,
-		["highgain"] = 0.89,
-		["density"] = 0.4,
-		["diffusion"] = 0.03,
-		["decaytime"] = 1.49 ,
+		["gain"] = 0.4,
+		["highgain"] = 1.4,
+		["density"] = 0.3,
+		["diffusion"] = 0.4,
+		["decaytime"] = 1.2 ,
 		["decayhighratio"] = 0.83,
-		["earlygain"] = 0.05,
+		["earlygain"] = 1.26,
 		["earlydelay"] = 0.05,
-		["lategain"] = 1.26,
+		["lategain"] = 0.0,
 		["latedelay"] = 0.011,
-		["roomrolloff"] = 0,
+		["roomrolloff"] = 0.01,
 		["airabsorption"] = 0.994,
 		["highlimit"] = true
 	})
@@ -275,16 +285,16 @@ function love.load()
 
 	LvLK3D.AddNewSoundEffect("reverbHuge", {
 		["type"] = "reverb",
-		["gain"] = 1,
-		["highgain"] = 0.5,
-		["density"] = 0.3,
-		["diffusion"] = 0.03,
-		["decaytime"] = 4.49,
-		["decayhighratio"] = 0.83,
-		["earlygain"] = 0.05,
-		["earlydelay"] = 0.05,
-		["lategain"] = 1.26,
-		["latedelay"] = 0.011,
+		["gain"] = 0.4,
+		["highgain"] = 1.4,
+		["density"] = 0.1,
+		["diffusion"] = 0.3,
+		["decaytime"] = 2.4 ,
+		["decayhighratio"] = 1.0,
+		["earlygain"] = 0.20,
+		["earlydelay"] = 0.0,
+		["lategain"] = 1.20,
+		["latedelay"] = 0.1,
 		["roomrolloff"] = 0,
 		["airabsorption"] = 0.994,
 		["highlimit"] = true
@@ -292,11 +302,11 @@ function love.load()
 
 	LvLK3D.AddNewSoundEffect("reverbSmall", {
 		["type"] = "reverb",
-		["gain"] = 1,
-		["highgain"] = 0.4,
-		["density"] = 1,
-		["diffusion"] = 0.1,
-		["decaytime"] = 0.20,
+		["gain"] = 0.5,
+		["highgain"] = 3.0,
+		["density"] = 0.0,
+		["diffusion"] = 0.8,
+		["decaytime"] = 0.5,
 		["decayhighratio"] = 0.83,
 		["earlygain"] = 1,
 		["earlydelay"] = 0.1,
@@ -324,7 +334,7 @@ function love.load()
 	local source2 = LvLK3D.PlaySound3D("sounds/Enter the Maze.wav", Vector(16, 0, 0), 1, 3)
 	LvLK3D.SetSourceEffect(source2, "reverbSmall", true)
 	LvLK3D.SetSourceFilter(source2, {
-		["volume"] = 0,
+		["volume"] = 0.0,
 		["type"] = "lowpass"
 	})
 	source2:setLooping(true)
@@ -332,14 +342,22 @@ function love.load()
 
 	Source3_Dynamic = LvLK3D.PlaySound3D("sounds/Space Jazz.wav", Vector(0, 0, -16), 1, 3)
 	LvLK3D.SetSourceEffect(Source3_Dynamic, "reverbLarge", true)
-	--[[
 	LvLK3D.SetSourceFilter(Source3_Dynamic, {
-		["volume"] = 0,
+		["volume"] = 0.0,
 		["type"] = "lowpass"
 	})
-	]]--
 	Source3_Dynamic:setLooping(true)
 	Source3_Dynamic:play()
+
+
+	local source4 = LvLK3D.PlaySound3D("sounds/Simplex.wav", Vector(-32, 0, 0), 1, 5)
+	LvLK3D.SetSourceEffect(source4, "reverbHuge", true)
+	LvLK3D.SetSourceFilter(source4, {
+		["volume"] = 0.0,
+		["type"] = "lowpass"
+	})
+	source4:setLooping(true)
+	source4:play()
 end
 
 
@@ -366,10 +384,18 @@ function love.update(dt)
 	LvLK3D.PushUniverse(UnivTest)
 		local dir = LvLK3D.CamMatrix_Rot:Forward()
 
-		local hit, pos, norm, dist = LvLK3D.TraceRay(LvLK3D.CamPos, dir, 8)
+		--local hit, pos, norm, dist = LvLK3D.TraceRay(LvLK3D.CamPos, dir, 8)
+
+		local hit, pos, norm = LvLK3D.TraceRay(LvLK3D.CamPos, dir, 8)
+		LvLK3D.SetObjectPos("cube_tr", pos + (norm * .1))
+
+
+		LvLK3D.SetObjectAng("lktest", Angle(CurTime * 24, CurTime * 32, 0))
+
+		--local hit, pos, norm = LvLK3D.TraceRay(LvLK3D.CamPos, dir, 8)
 		--LvLK3D.SetObjectPos("cube_tr", pos + (norm * .1))
 
-		local hit2, pos2, norm2, dist2 = LvLK3D.TraceRay(pos + (norm * .1), norm * .25, 8)
+		--local hit2, pos2, norm2, dist2 = LvLK3D.TraceRay(pos + (norm * .1), norm * .25, 8)
 		--LvLK3D.SetObjectPos("cube_tr_dir", pos2 + (norm2 * .1))
 
 

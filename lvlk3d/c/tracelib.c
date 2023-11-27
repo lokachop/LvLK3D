@@ -2,12 +2,13 @@
 #include <stdbool.h>
 #include <math.h>
 
-#define MAX_MODELS 4096
-#define MAX_VERTS 2097152
-#define MAX_FACES 1048576
+#define MAX_MODELS 1024
+#define MAX_VERTS 8192
+#define MAX_FACES 16384
 
 
 #define DBL_EPSILON 2.2204460492503131e-16
+#define MATH_HUGE 3.402823466e+38
 
 typedef struct Vector {
     float x;
@@ -15,11 +16,40 @@ typedef struct Vector {
     float z;
 } Vector;
 
+typedef struct Matrix4x4 {
+	float m_0_0;
+	float m_1_0;
+	float m_2_0;
+	float m_3_0;
+
+	float m_0_1;
+	float m_1_1;
+	float m_2_1;
+	float m_3_1;
+
+	float m_0_2;
+	float m_1_2;
+	float m_2_2;
+	float m_3_2;
+
+	float m_0_3;
+	float m_1_3;
+	float m_2_3;
+	float m_3_3;
+} Matrix4x4;
+
 typedef struct TraceResult {
     bool hit;
 	float dist;
     Vector pos;
 } TraceResult;
+
+typedef struct TraceResultObject {
+    bool hit;
+	float dist;
+    Vector pos;
+	Vector normal;
+} TraceResultObject;
 
 typedef struct UV {
 	float u;
@@ -27,48 +57,39 @@ typedef struct UV {
 } UV;
 
 typedef struct Face {
-	Vector normal;
-	unsigned long long v1i;
-	unsigned long long v2i;
-	unsigned long long v3i;
+	unsigned long v1i;
+	unsigned long v2i;
+	unsigned long v3i;
 
-	unsigned long long v1ui;
-	unsigned long long v2ui;
-	unsigned long long v3ui;
+	unsigned long v1ui;
+	unsigned long v2ui;
+	unsigned long v3ui;
 } Face;
 
 // later later
 typedef struct Model {
-	unsigned long long vertCount;
-	unsigned long long faceCount;
+	unsigned long vertCount;
+	unsigned long uvCount;
+	unsigned long faceCount;
 
-	Vector vertList[MAX_VERTS];
-	Face faceList[MAX_FACES];
+	Vector 	vertList[MAX_VERTS];
+	UV 		uvList[MAX_VERTS];
 
+	Vector 	normalList[MAX_FACES];
+	Face 	faceList[MAX_FACES];
 } Model;
-
-
-typedef struct LvLK3DModelData {
-	Vector verts[MAX_VERTS];
-	Vector normals[MAX_VERTS];
-	UV uvs[MAX_VERTS];
-	Face faceInd[MAX_FACES];
-} LvLK3DModelData;
 
 
 Model mdlList[MAX_MODELS];
 
-
-/*
-unsigned int declare_model(unsigned int index, unsigned long long vertCount, unsigned long long faceCount, Vector vertList[MAX_VERTS]) {
+void declare_model(unsigned int index, unsigned long vertCount, unsigned long uvCount, unsigned long faceCount) {
 	Model newMdl;
 	newMdl.vertCount = vertCount;
+	newMdl.uvCount = uvCount;
 	newMdl.faceCount = faceCount;
 
-	mdlList[index] = 
+	mdlList[index] = newMdl;
 };
-*/
-
 
 void vector_copy(Vector* result, Vector* const cpy) {
 	(*result).x = cpy->x;
@@ -126,13 +147,58 @@ void vector_cross(Vector* result, Vector* const vec1, Vector* const vec2) {
     (*result).z = vec1->x * vec2->y - vec1->y * vec2->x;
 };
 
+
+void vector_mul_matrix(Vector* result, Vector* const vec1, Matrix4x4* const mat1) {
+    (*result).x = (mat1->m_0_0 * vec1->x) + (mat1->m_1_0 * vec1->y) + (mat1->m_2_0 * vec1->z) + (mat1->m_3_0 * 1);
+    (*result).y = (mat1->m_0_1 * vec1->x) + (mat1->m_1_1 * vec1->y) + (mat1->m_2_1 * vec1->z) + (mat1->m_3_1 * 1);
+    (*result).z = (mat1->m_0_2 * vec1->x) + (mat1->m_1_2 * vec1->y) + (mat1->m_2_2 * vec1->z) + (mat1->m_3_2 * 1);
+};
+
+
+void vector_mul_matrix_rot(Vector* result, Vector* const vec1, Matrix4x4* const mat1) {
+    (*result).x = (mat1->m_0_0 * vec1->x) + (mat1->m_1_0 * vec1->y) + (mat1->m_2_0 * vec1->z);
+    (*result).y = (mat1->m_0_1 * vec1->x) + (mat1->m_1_1 * vec1->y) + (mat1->m_2_1 * vec1->z);
+    (*result).z = (mat1->m_0_2 * vec1->x) + (mat1->m_1_2 * vec1->y) + (mat1->m_2_2 * vec1->z);
+};
+
 float vector_dot(Vector* const vec1, Vector* const vec2) {
     return vec1->x * vec2->x + vec1->y * vec2->y + vec1->z * vec2->z;
+};
+
+float vector_normalize(Vector* vec1) {
+	float length = sqrt(pow(vec1->x, 2) + pow(vec1->y, 2) + pow(vec1->z, 2));
+
+	(*vec1).x = vec1->x / length;
+	(*vec1).y = vec1->y / length;
+	(*vec1).z = vec1->z / length;
 };
 
 void vector_print(Vector* const vec) {
 	printf("Vector(%.2f, %.2f, %.2f)", vec->x, vec->y, vec->z);
 };
+
+
+
+void model_push_vertex(unsigned int index, unsigned int vertIndex, Vector vertex) {
+	Vector cpy;
+	vector_copy(&cpy, &vertex);
+
+
+	mdlList[index].vertList[vertIndex] = cpy;
+};
+
+void model_push_uv(unsigned int index, unsigned int uvIndex, UV uv) {
+	mdlList[index].uvList[uvIndex] = uv;
+};
+
+void model_push_normal(unsigned int index, unsigned int normIndex, Vector normal) {
+	mdlList[index].normalList[normIndex] = normal;
+};
+
+void model_push_face(unsigned int index, unsigned int faceIndex, Face face) {
+	mdlList[index].faceList[faceIndex] = face;
+};
+
 
 // https://github.com/excessive/cpml/blob/master/modules/intersect.lua
 TraceResult rayIntersectsTriangle(Vector rayPos, Vector rayDir, Vector v1, Vector v2, Vector v3, bool backface_cull) {
@@ -220,3 +286,78 @@ TraceResult rayIntersectsTriangle(Vector rayPos, Vector rayDir, Vector v1, Vecto
 
 	return out;
 }
+
+
+TraceResultObject rayIntersectsModel(Vector rayPos, Vector rayDir, Matrix4x4 mdlMatrix, unsigned int mdlIndex, bool backface_cull, float minDistIn) {
+	Model* modelNfo = &mdlList[mdlIndex];
+
+	float minDist = minDistIn;
+	bool hit = false;
+	Vector hitPos;
+	Vector hitNormal;
+
+
+	int i;
+	for(i = 0; i <= modelNfo->faceCount; i++) {
+		Face* currFace = &modelNfo->faceList[i];
+		Vector* currNormo = &modelNfo->normalList[i];
+
+		Vector currNorm;
+		//vector_copy(&currNorm, currNormo);
+		vector_mul_matrix_rot(&currNorm, currNormo, &mdlMatrix);
+		vector_normalize(&currNorm);
+
+
+		Vector* vec1o = &modelNfo->vertList[currFace->v1i];
+		Vector* vec2o = &modelNfo->vertList[currFace->v2i];
+		Vector* vec3o = &modelNfo->vertList[currFace->v3i];
+
+		Vector vec1;
+		//vector_copy(&vec1, vec1o);
+		vector_mul_matrix(&vec1, vec1o, &mdlMatrix);
+
+		Vector vec2;
+		//vector_copy(&vec2, vec2o);
+		vector_mul_matrix(&vec2, vec2o, &mdlMatrix);
+
+		Vector vec3;
+		//vector_copy(&vec3, vec3o);
+		vector_mul_matrix(&vec3, vec3o, &mdlMatrix);
+
+
+
+		UV* uv1 = &modelNfo->uvList[currFace->v1ui];
+		UV* uv2 = &modelNfo->uvList[currFace->v2ui];
+		UV* uv3 = &modelNfo->uvList[currFace->v3ui];
+
+		Vector rPosCopy;
+		vector_copy(&rPosCopy, &rayPos);
+
+		Vector rDirCopy;
+		vector_copy(&rDirCopy, &rayDir);
+
+
+		TraceResult trOut = rayIntersectsTriangle(rayPos, rayDir, vec1, vec2, vec3, backface_cull);
+
+		if(!trOut.hit) {
+			continue;
+		}
+
+		if(trOut.dist < minDist) {
+			if(!hit) {
+				hit = true;
+			}
+			hitPos = trOut.pos;
+			hitNormal = currNorm;
+			minDist = trOut.dist;
+		}
+	}
+
+	TraceResultObject out;
+	out.hit = hit;
+	out.dist = minDist;
+	out.pos = hitPos;
+	out.normal = hitNormal;
+
+	return out;
+};

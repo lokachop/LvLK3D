@@ -189,16 +189,15 @@ function LvLK3D.RayTracedReverbThink(pos)
 end
 
 
---local nextReverb = 0
+local _nextReverb = 0
 local _lastPos = nil
 function LvLK3D.SoundThink()
 	--[[
-	if CurTime > nextReverb then
+	if CurTime > _nextReverb then
 		LvLK3D.RayTracedReverbThink()
-		nextReverb = CurTime + 0.01
+		_nextReverb = CurTime + 0.01
 	end
 	]]--
-
 
 	if not _lastPos then
 		_lastPos = LvLK3D.CamPos:Copy()
