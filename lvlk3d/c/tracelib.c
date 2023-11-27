@@ -288,7 +288,7 @@ TraceResult rayIntersectsTriangle(Vector rayPos, Vector rayDir, Vector v1, Vecto
 }
 
 
-TraceResultObject rayIntersectsModel(Vector rayPos, Vector rayDir, Matrix4x4 mdlMatrix, unsigned int mdlIndex, bool backface_cull, float minDistIn) {
+TraceResultObject rayIntersectsModel(Vector rayPos, Vector rayDir, Matrix4x4 mdlMatrix, unsigned int mdlIndex, bool backface_cull, float minDistIn, bool normInvert) {
 	Model* modelNfo = &mdlList[mdlIndex];
 
 	float minDist = minDistIn;
@@ -337,7 +337,14 @@ TraceResultObject rayIntersectsModel(Vector rayPos, Vector rayDir, Matrix4x4 mdl
 		vector_copy(&rDirCopy, &rayDir);
 
 
-		TraceResult trOut = rayIntersectsTriangle(rayPos, rayDir, vec1, vec2, vec3, backface_cull);
+
+		TraceResult trOut;
+		
+		if(normInvert == true) {
+			trOut = rayIntersectsTriangle(rayPos, rayDir, vec3, vec2, vec1, backface_cull);
+		} else {
+			trOut = rayIntersectsTriangle(rayPos, rayDir, vec1, vec2, vec3, backface_cull);
+		}
 
 		if(!trOut.hit) {
 			continue;
@@ -357,6 +364,11 @@ TraceResultObject rayIntersectsModel(Vector rayPos, Vector rayDir, Matrix4x4 mdl
 	out.hit = hit;
 	out.dist = minDist;
 	out.pos = hitPos;
+	
+	if(normInvert == true) {
+		vector_neg(&hitNormal);
+	}
+
 	out.normal = hitNormal;
 
 	return out;

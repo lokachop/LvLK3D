@@ -80,7 +80,7 @@ ffi.cdef([[
 	void model_push_face(unsigned int index, unsigned int faceIndex, Face face);
 
 	TraceResult rayIntersectsTriangle(Vector rayPos, Vector rayDir, Vector v1, Vector v2, Vector v3, bool backface_cull);
-	TraceResultObject rayIntersectsModel(Vector rayPos, Vector rayDir, Matrix4x4 mdlMatrix, unsigned int mdlIndex, bool backface_cull, float minDistIn);
+	TraceResultObject rayIntersectsModel(Vector rayPos, Vector rayDir, Matrix4x4 mdlMatrix, unsigned int mdlIndex, bool backface_cull, float minDistIn, bool normInvert);
 ]])
 local ModelNameLUT = {}
 local ModelIDLUT = {}
@@ -236,7 +236,7 @@ local function traceObjC(obj, ro, rd, minDist)
 	vecRD.y = rd[2]
 	vecRD.z = rd[3]
 
-	local traceResult = tracelib.rayIntersectsModel(vecRO, vecRD, cMatrix, cIdx, _trace_bf_cull, minDist or math.huge)
+	local traceResult = tracelib.rayIntersectsModel(vecRO, vecRD, cMatrix, cIdx, _trace_bf_cull, minDist or math.huge, obj["NORM_INVERT"] and true or false)
 
 	local posVec = Vector(0, 0, 0)
 	local normVec = Vector(0, 0, 0)

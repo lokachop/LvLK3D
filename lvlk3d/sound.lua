@@ -204,9 +204,7 @@ function LvLK3D.SoundThink()
 	end
 
 	local fow = LvLK3D.CamMatrix_Rot:Forward()
-	--print(fow)
 	local up = LvLK3D.CamMatrix_Rot:Up()
-	--print(up)
 
 	local pos = LvLK3D.CamPos
 
