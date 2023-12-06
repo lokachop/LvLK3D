@@ -1,4 +1,6 @@
 LvLK3D = LvLK3D or {}
+package.path = package.path .. ";app/?.lua"
+
 function love.load()
 	require("lvlk3d.lvlk3d")
 	CurTime = 0
@@ -115,6 +117,8 @@ function love.load()
 	LvLK3D.ProcTexDeclareTexture("bad_nouise", textureID_2)
 
 
+	LvLK3D.SetupPhysicsWorld(UnivTest)
+
 
 	LvLK3D.PushUniverse(UnivTest)
 		LvLK3D.SetSunLighting(false) -- dont do sun lighting
@@ -125,9 +129,9 @@ function love.load()
 
 
 
-		LvLK3D.AddLightToUniv("LightOne", Vector(0, 3, 2), 4, {0.25, 0.25, 1})
-		LvLK3D.AddLightToUniv("LightTwo", Vector(2, 3, -2), 4, {0.25, 1, 0.25})
-		LvLK3D.AddLightToUniv("LightThree", Vector(-2, 3, -2), 4, {1, 0.25, 0.25})
+		--LvLK3D.AddLightToUniv("LightOne", Vector(0, 3, 2), 4, {0.25, 0.25, 1})
+		--LvLK3D.AddLightToUniv("LightTwo", Vector(2, 3, -2), 4, {0.25, 1, 0.25})
+		--LvLK3D.AddLightToUniv("LightThree", Vector(-2, 3, -2), 4, {1, 0.25, 0.25})
 
 
 
@@ -177,6 +181,15 @@ function love.load()
 		LvLK3D.SetObjectFlag("lktest", "FULLBRIGHT", false)
 		LvLK3D.UpdateObjectMesh("lktest")
 		--LvLK3D.SetObjectShadow("lktest", true)
+
+
+		LvLK3D.AddObjectToUniv("lktest2", "cube_dae")
+		LvLK3D.SetObjectPos("lktest2", Vector(0, -1, -8))
+		LvLK3D.SetObjectScl("lktest2", Vector(1, 1, 1))
+		LvLK3D.SetObjectMat("lktest2", "white")
+		LvLK3D.SetObjectFlag("lktest2", "SHADING", true)
+		LvLK3D.SetObjectFlag("lktest2", "FULLBRIGHT", false)
+		LvLK3D.UpdateObjectMesh("lktest2")
 
 		LvLK3D.AddObjectToUniv("cube_floor", "cube")
 		LvLK3D.SetObjectPos("cube_floor", Vector(0, -2, -2.75))
@@ -249,6 +262,55 @@ function love.load()
 		--LvLK3D.SetObjectMat("rail", "traintrack_sheet")
 
 
+		LvLK3D.NewPhysicsBox("boxA", Vector(.4, .4, .4))
+		LvLK3D.SetPhysicsObjectMass("boxA", 2) -- 20 kg
+		LvLK3D.SetPhysicsObjectPos("boxA", Vector(0, 12, 8.25))
+		LvLK3D.SetPhysicsObjectAng("boxA", Angle(0, 45, 0))
+
+		LvLK3D.NewPhysicsBox("boxC", Vector(.4, .4, .4))
+		LvLK3D.SetPhysicsObjectMass("boxC", 2) -- 20 kg
+		LvLK3D.SetPhysicsObjectPos("boxC", Vector(0, 16, 8))
+		LvLK3D.SetPhysicsObjectAng("boxC", Angle(25, 45, 0))
+		--LvLK3D.SetPhysicsObjectStatic("boxA", false)
+
+
+		-- static box
+		local sbox_size = 4
+		local wall_size = .2
+		LvLK3D.AddLightToUniv("LightSbox", Vector(0, 0 + (sbox_size * 2), 8), 8, {0.62, 0.65, 0.75})
+
+		LvLK3D.NewPhysicsBox("sboxA", Vector(sbox_size, wall_size, sbox_size))
+		LvLK3D.SetPhysicsObjectMass("sboxA", 20) -- 20 kg
+		LvLK3D.SetPhysicsObjectPos("sboxA", Vector(0, -2 + wall_size * 4, 8))
+		LvLK3D.SetPhysicsObjectAng("sboxA", Angle(0, 0, 0))
+		LvLK3D.SetPhysicsObjectStatic("sboxA", true)
+
+		LvLK3D.NewPhysicsBox("sboxB", Vector(wall_size, sbox_size, sbox_size))
+		LvLK3D.SetPhysicsObjectMass("sboxB", 20) -- 20 kg
+		LvLK3D.SetPhysicsObjectPos("sboxB", Vector(-sbox_size, sbox_size * .5, 8))
+		LvLK3D.SetPhysicsObjectAng("sboxB", Angle(0, 0, 0))
+		LvLK3D.SetPhysicsObjectStatic("sboxB", true)
+
+		LvLK3D.NewPhysicsBox("sboxC", Vector(wall_size, sbox_size, sbox_size))
+		LvLK3D.SetPhysicsObjectMass("sboxC", 20) -- 20 kg
+		LvLK3D.SetPhysicsObjectPos("sboxC", Vector(sbox_size, sbox_size * .5, 8))
+		LvLK3D.SetPhysicsObjectAng("sboxC", Angle(0, 0, 0))
+		LvLK3D.SetPhysicsObjectStatic("sboxC", true)
+
+		LvLK3D.NewPhysicsBox("sboxD", Vector(sbox_size, sbox_size, wall_size))
+		LvLK3D.SetPhysicsObjectMass("sboxD", 20) -- 20 kg
+		LvLK3D.SetPhysicsObjectPos("sboxD", Vector(0, sbox_size * .5, 8 + sbox_size))
+		LvLK3D.SetPhysicsObjectAng("sboxD", Angle(0, 0, 0))
+		LvLK3D.SetPhysicsObjectStatic("sboxD", true)
+
+
+		LvLK3D.NewPhysicsBox("sboxE", Vector(sbox_size, sbox_size, wall_size))
+		LvLK3D.SetPhysicsObjectMass("sboxE", 20) -- 20 kg
+		LvLK3D.SetPhysicsObjectPos("sboxE", Vector(0, sbox_size * .5, 8 - sbox_size))
+		LvLK3D.SetPhysicsObjectAng("sboxE", Angle(0, 0, 0))
+		LvLK3D.SetPhysicsObjectStatic("sboxE", true)
+
+
 		for k, v in pairs(LvLK3D.CurrUniv["lights"]) do
 			local idx = "lightID " .. v.tag
 			LvLK3D.AddObjectToUniv(idx, "cube")
@@ -286,11 +348,11 @@ function love.load()
 	LvLK3D.AddNewSoundEffect("reverbHuge", {
 		["type"] = "reverb",
 		["gain"] = 0.4,
-		["highgain"] = 1.4,
+		["highgain"] = 0.6,
 		["density"] = 0.1,
 		["diffusion"] = 0.3,
 		["decaytime"] = 2.4 ,
-		["decayhighratio"] = 1.0,
+		["decayhighratio"] = 0.2,
 		["earlygain"] = 0.20,
 		["earlydelay"] = 0.0,
 		["lategain"] = 1.20,
@@ -370,6 +432,29 @@ local function reflect(I, N)
 	return I - 2 * N:Dot(I) * N
 end
 
+
+
+local _throwFlag = false
+local _throwIdx = 0
+local function throwCubes(dt)
+	if love.mouse.isDown(1) and not _throwFlag then
+		_throwFlag = true
+		local fow = LvLK3D.CamMatrix_Rot:Forward()
+
+
+		local idx = "throw" .. _throwIdx
+		LvLK3D.NewPhysicsBox(idx, Vector(.4, .4, .4))
+		LvLK3D.SetPhysicsObjectMass(idx, 2) -- 20 kg
+		LvLK3D.SetPhysicsObjectPos(idx, LvLK3D.CamPos + (fow * 1.5))
+		LvLK3D.SetPhysicsObjectVel(idx, fow * 16)
+
+		_throwIdx = _throwIdx + 1
+
+	elseif _throwFlag and not love.mouse.isDown(1) then
+		_throwFlag = false
+	end
+end
+
 function love.update(dt)
 	local fow = LvLK3D.CamMatrix_Rot:Forward()
 	local up = LvLK3D.CamMatrix_Rot:Up()
@@ -377,27 +462,18 @@ function love.update(dt)
 
 
 	CurTime = CurTime + dt
-	--LvLK3D.NoclipCam(dt)
 
 	LvLK3D.MouseCamThink(dt)
 
 	LvLK3D.PushUniverse(UnivTest)
+		throwCubes(dt)
 		local dir = LvLK3D.CamMatrix_Rot:Forward()
-
-		--local hit, pos, norm, dist = LvLK3D.TraceRay(LvLK3D.CamPos, dir, 8)
 
 		local hit, pos, norm = LvLK3D.TraceRay(LvLK3D.CamPos, dir, 8)
 		LvLK3D.SetObjectPos("cube_tr", pos + (norm * .1))
 
 
 		LvLK3D.SetObjectAng("lktest", Angle(CurTime * 24, CurTime * 32, 0))
-
-		--local hit, pos, norm = LvLK3D.TraceRay(LvLK3D.CamPos, dir, 8)
-		--LvLK3D.SetObjectPos("cube_tr", pos + (norm * .1))
-
-		--local hit2, pos2, norm2, dist2 = LvLK3D.TraceRay(pos + (norm * .1), norm * .25, 8)
-		--LvLK3D.SetObjectPos("cube_tr_dir", pos2 + (norm2 * .1))
-
 
 		LvLK3D.SetObjectAng("cube1", Angle(CurTime * 24, CurTime * 32, 0))
 		LvLK3D.SetObjectPos("cube1", Vector(math.sin(CurTime * .75) * 2.65, 0, math.cos(CurTime * .4532) * 2.5))
@@ -411,6 +487,8 @@ function love.update(dt)
 		--updateLightAndExShadow("LightTwo", Vector(math.cos(CurTime * 1.85) * 8.6546, math.sin(CurTime * 1.24) + 3, math.sin(CurTime * 1.2645767) * 10.523))
 		--updateLightAndExShadow("LightThree", Vector(math.cos(CurTime * 0.125) * 12.6546, (math.sin(CurTime * 0.62) * 2) + 3, math.sin(CurTime * 0.25645767) * 10.523))
 
+		LvLK3D.PhysicsThink(dt)
+		LvLK3D.PhysicsDebugRender()
 		LvLK3D.SoundThink()
 	LvLK3D.PopUniverse()
 end

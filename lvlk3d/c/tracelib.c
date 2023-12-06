@@ -91,71 +91,71 @@ void declare_model(unsigned int index, unsigned long vertCount, unsigned long uv
 	mdlList[index] = newMdl;
 };
 
-void vector_copy(Vector* result, Vector* const cpy) {
+inline void vector_copy(Vector* result, Vector* const cpy) {
 	(*result).x = cpy->x;
 	(*result).y = cpy->y;
 	(*result).z = cpy->z;
 };
 
 
-void vector_sub(Vector* vec1, Vector* const vec2) {
+inline void vector_sub(Vector* vec1, Vector* const vec2) {
     (*vec1).x = vec1->x - vec2->x;
     (*vec1).y = vec1->y - vec2->y;
     (*vec1).z = vec1->z - vec2->z;
 };
 
-void vector_add(Vector* vec1, Vector* const vec2) {
+inline void vector_add(Vector* vec1, Vector* const vec2) {
     (*vec1).x = vec1->x + vec2->x;
     (*vec1).y = vec1->y + vec2->y;
     (*vec1).z = vec1->z + vec2->z;
 };
 
-void vector_neg(Vector* vec) {
+inline void vector_neg(Vector* vec) {
 	(*vec).x = -vec->x;
 	(*vec).y = -vec->y;
 	(*vec).z = -vec->z;
 }
 
-void vector_neg_r(Vector* out, Vector* const vec) {
+inline void vector_neg_r(Vector* out, Vector* const vec) {
 	(*out).x = -vec->x;
 	(*out).y = -vec->y;
 	(*out).z = -vec->z;
 }
 
-void vector_mul_f(Vector* vec1, float s) {
+inline void vector_mul_f(Vector* vec1, float s) {
     (*vec1).x = vec1->x * s;
     (*vec1).y = vec1->y * s;
     (*vec1).z = vec1->z * s;
 };
 
-void vector_sub_r(Vector* result, Vector* const vec1, Vector* const vec2) {
+inline void vector_sub_r(Vector* result, Vector* const vec1, Vector* const vec2) {
     (*result).x = vec1->x - vec2->x;
     (*result).y = vec1->y - vec2->y;
     (*result).z = vec1->z - vec2->z;
 };
 
-void vector_add_r(Vector* result, Vector* const vec1, Vector* const vec2) {
+inline void vector_add_r(Vector* result, Vector* const vec1, Vector* const vec2) {
     (*result).x = vec1->x + vec2->x;
     (*result).y = vec1->y + vec2->y;
     (*result).z = vec1->z + vec2->z;
 };
 
 
-void vector_cross(Vector* result, Vector* const vec1, Vector* const vec2) {
+inline void vector_cross(Vector* result, Vector* const vec1, Vector* const vec2) {
     (*result).x = vec1->y * vec2->z - vec1->z * vec2->y;
     (*result).y = vec1->z * vec2->x - vec1->x * vec2->z;
     (*result).z = vec1->x * vec2->y - vec1->y * vec2->x;
 };
 
 
-void vector_mul_matrix(Vector* result, Vector* const vec1, Matrix4x4* const mat1) {
+inline void vector_mul_matrix(Vector* result, Vector* const vec1, Matrix4x4* const mat1) {
     (*result).x = (mat1->m_0_0 * vec1->x) + (mat1->m_1_0 * vec1->y) + (mat1->m_2_0 * vec1->z) + (mat1->m_3_0 * 1);
     (*result).y = (mat1->m_0_1 * vec1->x) + (mat1->m_1_1 * vec1->y) + (mat1->m_2_1 * vec1->z) + (mat1->m_3_1 * 1);
     (*result).z = (mat1->m_0_2 * vec1->x) + (mat1->m_1_2 * vec1->y) + (mat1->m_2_2 * vec1->z) + (mat1->m_3_2 * 1);
 };
 
 
-void vector_mul_matrix_rot(Vector* result, Vector* const vec1, Matrix4x4* const mat1) {
+inline void vector_mul_matrix_rot(Vector* result, Vector* const vec1, Matrix4x4* const mat1) {
     (*result).x = (mat1->m_0_0 * vec1->x) + (mat1->m_1_0 * vec1->y) + (mat1->m_2_0 * vec1->z);
     (*result).y = (mat1->m_0_1 * vec1->x) + (mat1->m_1_1 * vec1->y) + (mat1->m_2_1 * vec1->z);
     (*result).z = (mat1->m_0_2 * vec1->x) + (mat1->m_1_2 * vec1->y) + (mat1->m_2_2 * vec1->z);

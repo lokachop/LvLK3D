@@ -103,10 +103,14 @@ local function reflect(I, N)
 end
 
 
+local accumCount = 32
+local accumBufferRTSound = {}
+
+
 local RT_REVERB_RAYS = 16
-local RT_REVERB_RAY_ENERGY = 6
+local RT_REVERB_RAY_ENERGY = 12
 local RT_REVERB_MAX_BOUNCES = 6
-local RT_REVERB_ENERGY_EXTRACT = 0.2
+local RT_REVERB_ENERGY_EXTRACT = 0.1
 function LvLK3D.RayTracedReverbThink(pos)
 	local accumLen = 0
 	local accumBounces = 0
@@ -126,22 +130,17 @@ function LvLK3D.RayTracedReverbThink(pos)
 			local hit, hpos, norm, dist, obj = LvLK3D.TraceRay(rpos, dir, RT_REVERB_RAY_ENERGY)
 
 			accumLen = accumLen + dist
+			energy = energy - dist
+
 
 			if hit then
-				accumEnergyExtract = accumEnergyExtract + RT_REVERB_ENERGY_EXTRACT
-				energy = energy - dist
-				--suck energy
-				--energy = energy * (1 - RT_REVERB_ENERGY_EXTRACT)
-			elseif not hit then
-				LvLK3D.SetObjectPos("cube_tr", rpos)
-				LvLK3D.SetObjectPos("cube_tr_dir", hpos)
+				local extr = RT_REVERB_ENERGY_EXTRACT
+				if obj["REVERB_ABSORPTION"] then
+					extr = obj["REVERB_ABSORPTION"]
+				end
 
-				energy = 0
+				accumEnergyExtract = accumEnergyExtract
 			end
-
-			--print("bounce n*", j)
-			--print("eng,", energy)
-			--print("dist,", dist)
 
 			if energy <= 0 then
 				goto _contRTAudio
@@ -165,23 +164,59 @@ function LvLK3D.RayTracedReverbThink(pos)
 	--print("ee", accumEnergyExtract)
 
 
-	local absorb = math.abs(1 - (accumBounces / RT_REVERB_MAX_BOUNCES))
-	local decaySize = (accumLen / RT_REVERB_RAY_ENERGY) * 1.5
+	table.insert(accumBufferRTSound, 1, {accumBounces, accumLen, accumEnergyExtract})
 
-	local density =  math.abs(1 - (accumBounces / RT_REVERB_MAX_BOUNCES))
+	if #accumBufferRTSound <= accumCount then
+		return
+	end
+
+	accumBufferRTSound[accumCount] = nil
+
+
+
+	local avgBounces = 0
+	local avgLen = 0
+	local avgEnergyExtract = 0
+	for i = 1, accumCount - 1 do
+		local var = accumBufferRTSound[i]
+		avgBounces = avgBounces + var[1]
+		avgLen = avgLen + var[2]
+		avgEnergyExtract = avgEnergyExtract + var[3]
+	end
+
+	avgBounces = avgBounces / accumCount
+	avgLen = avgLen / accumCount
+	avgEnergyExtract = avgEnergyExtract / accumCount
+
+	--print("b", avgBounces)
+	--print("l", avgLen)
+	--print("ee", avgEnergyExtract)
+
+
+	local absorb = math.abs(1 - (avgBounces / RT_REVERB_MAX_BOUNCES))
+	local decaySize = (avgLen / RT_REVERB_RAY_ENERGY) * 1.5
+	local density =  math.abs(1 - (avgBounces / RT_REVERB_MAX_BOUNCES))
+
+	local lateDelay = (avgLen / RT_REVERB_RAY_ENERGY) * .5
+
+	local preDelay = (avgLen / RT_REVERB_RAY_ENERGY) * .25
+	print(avgBounces, 1 - absorb)
+
+	--print(avgLen, decaySize)
+	--print(avgBounces, density)
 
 	LvLK3D.AddNewSoundEffect("reverbRaytraced", {
 		["type"] = "reverb",
-		["gain"] = absorb,
+		["gain"] = 1,
 		["highgain"] = 1 - absorb,
 		["density"] = density,
 		["diffusion"] = density,
 		["decaytime"] = decaySize,
-		["decayhighratio"] = 0.83,
-		["earlygain"] = 0.05,
-		["earlydelay"] = 0.05,
-		["lategain"] = 1.26,
-		["latedelay"] = 0.011,
+		["decayhighratio"] = math.min(1 - absorb, .9),
+		["earlygain"] = density,
+		["earlydelay"] = preDelay,
+		["lategain"] = 1 - density,
+		["latedelay"] = 1 - preDelay,
 		["roomrolloff"] = 0,
 		["airabsorption"] = 0.994,
 		["highlimit"] = true

@@ -1,5 +1,5 @@
 function love.conf(t)
-    t.version = "11.4"
+    t.version = "11.5"
     t.window.title = "LvLK3D"
     t.window.borderless = false
     t.window.width = 1920 * .75

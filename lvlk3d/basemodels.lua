@@ -5,23 +5,21 @@ local function readFile(path)
     return love.filesystem.read(path)
 end
 
-local function loadModelFromOBJ(name, path)
-    local objData = readFile(path)
-    if not objData then
-        error("Could not read model \"" .. path .. "\"")
-        return
-    end
 
-    LvLK3D.DeclareModelOBJ(name, objData)
-end
+LvLK3D.LoadModelFromOBJ("cube", "models/cubenuv.obj")
+LvLK3D.LoadModelFromOBJ("plane", "models/plane.obj")
+LvLK3D.LoadModelFromOBJ("lokachop_sqr", "models/lokachopsqr.obj")
 
-loadModelFromOBJ("cube", "models/cubenuv.obj")
-loadModelFromOBJ("plane", "models/plane.obj")
-loadModelFromOBJ("lokachop_sqr", "models/lokachopsqr.obj")
+LvLK3D.LoadModelFromOBJ("traintrack_hq", "models/traintrack.obj")
+LvLK3D.LoadModelFromOBJ("traintrack", "models/traintrack_lod.obj")
 
-loadModelFromOBJ("traintrack_hq", "models/traintrack.obj")
-loadModelFromOBJ("traintrack", "models/traintrack_lod.obj")
+LvLK3D.LoadModelFromOBJ("train", "models/train/train.obj")
+LvLK3D.LoadModelFromOBJ("train_lod1", "models/train/train_lod1.obj")
+LvLK3D.LoadModelFromOBJ("train_lod2", "models/train/train_lod2.obj")
 
-loadModelFromOBJ("train", "models/train/train.obj")
-loadModelFromOBJ("train_lod1", "models/train/train_lod1.obj")
-loadModelFromOBJ("train_lod2", "models/train/train_lod2.obj")
+
+--LvLK3D.LoadModelFromOBJ("human", "models/cubenuv.obj") -- temp no-error preload
+--LvLK3D.LoadModelFromCollada("human", "models/human.dae")
+
+LvLK3D.LoadModelFromOBJ("cube_dae", "models/cubenuv.obj") -- temp no-error preload
+LvLK3D.LoadModelFromCollada("cube_dae", "models/cube.dae")
