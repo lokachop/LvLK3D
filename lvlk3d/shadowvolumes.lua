@@ -212,7 +212,8 @@ end
 
 LvLK3D.NewShader("shadowvolume", "lvlk3d/shader/mesh/shadowvolume.frag", "lvlk3d/shader/mesh/shadowvolume.vert", function(obj, shader)
 	shader:send("mdlRotationMatrix", obj.mat_rot)
-	shader:send("mdlTranslationMatrix", obj.mat_transscl)
+	shader:send("mdlTranslationMatrix", obj.mat_trs)
+	shader:send("mdlScaleMatrix", obj.mat_scl)
 
 	--shader:send("mdlMatrix", obj.mat_mdl)
 	shader:send("viewMatrix", LvLK3D.CamMatrix_Rot * LvLK3D.CamMatrix_Trans)
@@ -226,7 +227,8 @@ end)
 
 LvLK3D.NewShader("shadowcap", "lvlk3d/shader/mesh/shadowcap.frag", "lvlk3d/shader/mesh/shadowcap.vert", function(obj, shader)
 	shader:send("mdlRotationMatrix", obj.mat_rot)
-	shader:send("mdlTranslationMatrix", obj.mat_transscl)
+	shader:send("mdlTranslationMatrix", obj.mat_trs)
+	shader:send("mdlScaleMatrix", obj.mat_scl)
 
 	--shader:send("mdlMatrix", obj.mat_mdl)
 	shader:send("viewMatrix", LvLK3D.CamMatrix_Rot * LvLK3D.CamMatrix_Trans)
@@ -243,7 +245,8 @@ end)
 
 LvLK3D.NewShader("shadowvolumesun", "lvlk3d/shader/mesh/shadowvolume.frag", "lvlk3d/shader/mesh/shadowvolumesun.vert", function(obj, shader)
 	shader:send("mdlRotationMatrix", obj.mat_rot)
-	shader:send("mdlTranslationMatrix", obj.mat_transscl)
+	shader:send("mdlTranslationMatrix", obj.mat_trs)
+	shader:send("mdlScaleMatrix", obj.mat_scl)
 
 	--shader:send("mdlMatrix", obj.mat_mdl)
 	shader:send("viewMatrix", LvLK3D.CamMatrix_Rot * LvLK3D.CamMatrix_Trans)
@@ -259,7 +262,8 @@ end)
 
 LvLK3D.NewShader("shadowcapsun", "lvlk3d/shader/mesh/shadowcap.frag", "lvlk3d/shader/mesh/shadowcapsun.vert", function(obj, shader)
 	shader:send("mdlRotationMatrix", obj.mat_rot)
-	shader:send("mdlTranslationMatrix", obj.mat_transscl)
+	shader:send("mdlTranslationMatrix", obj.mat_trs)
+	shader:send("mdlScaleMatrix", obj.mat_scl)
 
 	--shader:send("mdlMatrix", obj.mat_mdl)
 	shader:send("viewMatrix", LvLK3D.CamMatrix_Rot * LvLK3D.CamMatrix_Trans)

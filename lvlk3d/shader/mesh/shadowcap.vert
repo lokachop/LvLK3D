@@ -6,6 +6,7 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 mdlRotationMatrix;
 uniform mat4 mdlTranslationMatrix;
+uniform mat4 mdlScaleMatrix;
 uniform bool capFlip;
 uniform vec3 lightPos;
 
@@ -22,7 +23,7 @@ varying vec3 rotatedNormal;
 varying vec4 vertexColor;
 
 vec4 position(mat4 transformProjection, vec4 vertexPosition) {
-    mat4 mdlMatrix = mdlTranslationMatrix * mdlRotationMatrix;
+    mat4 mdlMatrix = mdlTranslationMatrix * mdlRotationMatrix * mdlScaleMatrix;
 
     // calculate the positions of the transformed coordinates on the screen
     // save each step of the process, as these are often useful when writing custom fragment shaders

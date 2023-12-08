@@ -1,6 +1,7 @@
 LvLK3D = LvLK3D or {}
 
 love.audio.setDistanceModel("exponent")
+love.audio.setDopplerScale(1)
 
 LvLK3D.ValidSources = {}
 LvLK3D.ActiveSources = {}
@@ -226,7 +227,7 @@ end
 
 local _nextReverb = 0
 local _lastPos = nil
-function LvLK3D.SoundThink()
+function LvLK3D.SoundThink(dt)
 	--[[
 	if CurTime > _nextReverb then
 		LvLK3D.RayTracedReverbThink()
@@ -250,7 +251,7 @@ function LvLK3D.SoundThink()
 	love.audio.setOrientation(fow[1], fow[2], fow[3], up[1], up[2], up[3])
 	love.audio.setPosition(pos[1], pos[2], pos[3])
 
-	love.audio.setVelocity(-_lastPos[1], -_lastPos[2], -_lastPos[3])
+	love.audio.setVelocity(-_lastPos[1] / dt, -_lastPos[2] / dt, -_lastPos[3] / dt)
 
 	_lastPos = LvLK3D.CamPos:Copy()
 end

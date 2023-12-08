@@ -6,7 +6,7 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 mdlRotationMatrix;
 uniform mat4 mdlTranslationMatrix;
-
+uniform mat4 mdlScaleMatrix;
 
 // the vertex normal attribute must be defined, as it is custom unlike the other attributes
 attribute vec3 VertexNormal;
@@ -20,7 +20,7 @@ varying vec3 rotatedNormal;
 varying vec4 vertexColor;
 
 vec4 position(mat4 transformProjection, vec4 vertexPosition) {
-    mat4 mdlMatrix = mdlTranslationMatrix * mdlRotationMatrix;
+    mat4 mdlMatrix = mdlTranslationMatrix * mdlRotationMatrix * mdlScaleMatrix;
 
 
     // calculate the positions of the transformed coordinates on the screen

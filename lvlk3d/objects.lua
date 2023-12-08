@@ -60,11 +60,15 @@ end
 function LvLK3D.AddObjectToUniv(name, mdl)
 	local mat_rot = Matrix()
 	mat_rot:SetAngles(Angle(0, 0, 0))
-	local mat_transscl = Matrix()
-	mat_transscl:SetScale(Vector(1, 1, 1))
+
+	local mat_trs = Matrix()
+	mat_trs:Identity()
+
+	local mat_scl = Matrix()
+	mat_scl:SetScale(Vector(1, 1, 1))
 
 	local mat_mdl = Matrix()
-	mat_mdl:SetScale(Vector(1, 1, 1))
+	mat_mdl:Identity()
 
 	LvLK3D.CurrUniv["objects"][name] = {
 		name = name,
@@ -75,7 +79,8 @@ function LvLK3D.AddObjectToUniv(name, mdl)
 		col = {1, 1, 1},
 		mat = "none",
 		mat_rot = mat_rot,
-		mat_transscl = mat_transscl,
+		mat_trs = mat_trs,
+		mat_scl = mat_scl,
 		mat_mdl = mat_mdl,
 		shader = "base",
 	}
@@ -88,14 +93,23 @@ function LvLK3D.AddObjectToUniv(name, mdl)
 	initMesh(LvLK3D.CurrUniv["objects"][name])
 end
 
+local function recalculateObjectMatrices(obj)
+	obj.mat_mdl = obj.mat_trs * obj.mat_rot * obj.mat_scl
+end
+
+-- DONT USE THIS, INTERNAL
+function LvLK3D.__recalculateObjectMatrices(name)
+	recalculateObjectMatrices(LvLK3D.CurrUniv["objects"][name])
+end
+
 function LvLK3D.SetObjectPos(name, pos)
 	local obj = LvLK3D.CurrUniv["objects"][name]
 
 	obj.pos = pos or Vector(0, 0, 0)
 
-	obj.mat_transscl:SetTranslation(pos)
+	obj.mat_trs:SetTranslation(pos)
 
-	obj.mat_mdl = obj.mat_transscl * obj.mat_rot
+	recalculateObjectMatrices(obj)
 end
 
 function LvLK3D.SetObjectAng(name, ang)
@@ -104,8 +118,7 @@ function LvLK3D.SetObjectAng(name, ang)
 	obj.ang = ang or Angle(0, 0, 0)
 
 	obj.mat_rot:SetAngles(ang)
-	obj.mat_mdl = obj.mat_transscl * obj.mat_rot
-
+	recalculateObjectMatrices(obj)
 	---mat_mdl
 end
 
@@ -115,19 +128,19 @@ function LvLK3D.SetObjectPosAng(name, pos, ang)
 	obj.pos = pos or Vector(0, 0, 0)
 	obj.ang = ang or Angle(0, 0, 0)
 
-	obj.mat_transscl:SetTranslation(pos)
+	obj.mat_trs:SetTranslation(pos)
 	obj.mat_rot:SetAngles(ang)
 
-	obj.mat_mdl = obj.mat_transscl * obj.mat_rot
+	recalculateObjectMatrices(obj)
 end
 
 function LvLK3D.SetObjectScl(name, scl)
 	local obj = LvLK3D.CurrUniv["objects"][name]
 
 	obj.scl = scl or Vector(0, 0, 0)
-	obj.mat_transscl:SetScale(scl)
+	obj.mat_scl:SetScale(scl)
 
-	obj.mat_mdl = obj.mat_transscl * obj.mat_rot
+	recalculateObjectMatrices(obj)
 end
 
 function LvLK3D.SetObjectCol(name, col)

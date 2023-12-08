@@ -129,6 +129,44 @@ local mat_meta = {
         x[13] = 0 x[14] = 0 x[15] = 0 x[16] = 1
     end,
 
+    -- https://github.com/cadenji/foolrenderer/blob/main/foolrenderer/math/matrix.h
+    ["GetInverse"] = function(x)
+        local a11, a12, a13, a14 = x[ 1], x[ 2], x[ 3], x[ 4]
+        local a21, a22, a23, a24 = x[ 5], x[ 6], x[ 7], x[ 8]
+        local a31, a32, a33, a34 = x[ 9], x[10], x[11], x[12]
+        local a41, a42, a43, a44 = x[13], x[14], x[15], x[16]
+
+
+        local adj = Matrix()
+        adj[ 1] = a22 * a33 * a44 + a23 * a34 * a42 + a24 * a32 * a43 - a24 * a33 * a42 - a23 * a32 * a44 - a22 * a34 * a43
+        adj[ 2] = -a12 * a33 * a44 - a13 * a34 * a42 - a14 * a32 * a43 + a14 * a33 * a42 + a13 * a32 * a44 + a12 * a34 * a43
+        adj[ 3] = a12 * a23 * a44 + a13 * a24 * a42 + a14 * a22 * a43 - a14 * a23 * a42 - a13 * a22 * a44 - a12 * a24 * a43
+        adj[ 4] = -a12 * a23 * a34 - a13 * a24 * a32 - a14 * a22 * a33 + a14 * a23 * a32 + a13 * a22 * a34 + a12 * a24 * a33
+
+        adj[ 5] = -a21 * a33 * a44 - a23 * a34 * a41 - a24 * a31 * a43 + a24 * a33 * a41 + a23 * a31 * a44 + a21 * a34 * a43
+        adj[ 6] = a11 * a33 * a44 + a13 * a34 * a41 + a14 * a31 * a43 - a14 * a33 * a41 - a13 * a31 * a44 - a11 * a34 * a43
+        adj[ 7] = -a11 * a23 * a44 - a13 * a24 * a41 - a14 * a21 * a43 + a14 * a23 * a41 + a13 * a21 * a44 + a11 * a24 * a43
+        adj[ 8] = a11 * a23 * a34 + a13 * a24 * a31 + a14 * a21 * a33 - a14 * a23 * a31 - a13 * a21 * a34 - a11 * a24 * a33
+
+        adj[ 9] = a21 * a32 * a44 + a22 * a34 * a41 + a24 * a31 * a42 - a24 * a32 * a41 - a22 * a31 * a44 - a21 * a34 * a42
+        adj[10] = -a11 * a32 * a44 - a12 * a34 * a41 - a14 * a31 * a42 + a14 * a32 * a41 + a12 * a31 * a44 + a11 * a34 * a42
+        adj[11] = a11 * a22 * a44 + a12 * a24 * a41 + a14 * a21 * a42 - a14 * a22 * a41 - a12 * a21 * a44 - a11 * a24 * a42
+        adj[12] = -a11 * a22 * a34 - a12 * a24 * a31 - a14 * a21 * a32 + a14 * a22 * a31 + a12 * a21 * a34 + a11 * a24 * a32
+
+        adj[13] = -a21 * a32 * a43 - a22 * a33 * a41 - a23 * a31 * a42 + a23 * a32 * a41 + a22 * a31 * a43 + a21 * a33 * a42
+        adj[14] = a11 * a32 * a43 + a12 * a33 * a41 + a13 * a31 * a42 - a13 * a32 * a41 - a12 * a31 * a43 - a11 * a33 * a42
+        adj[15] = -a11 * a22 * a43 - a12 * a23 * a41 - a13 * a21 * a42 + a13 * a22 * a41 + a12 * a21 * a43 + a11 * a23 * a42
+        adj[16] = a11 * a22 * a33 + a12 * a23 * a31 + a13 * a21 * a32 - a13 * a22 * a31 - a12 * a21 * a33 - a11 * a23 * a32
+
+
+        local determinant = a11 * adj[1] + a21 * adj[2] + a31 * adj[3] + a41 * adj[4]
+        if determinant == 0.0 then
+            return Matrix()
+        end
+
+        return adj * (1 / determinant)
+    end,
+
     ["SetAngles"] = function(x, y)
         local rx = math.rad(y[1])
         local ry = math.rad(y[2])

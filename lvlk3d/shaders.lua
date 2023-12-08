@@ -5,7 +5,8 @@ LvLK3D.CurrShader = nil
 local _baseVsh = LvLK3D.RelaPath .. "/shader/mesh/generic.vert"
 local _baseOnRender = function(obj, shader)
     shader:send("mdlRotationMatrix", obj.mat_rot)
-    shader:send("mdlTranslationMatrix", obj.mat_transscl)
+    shader:send("mdlTranslationMatrix", obj.mat_trs)
+    shader:send("mdlScaleMatrix", obj.mat_scl)
 
     --shader:send("mdlMatrix", obj.mat_mdl)
     shader:send("viewMatrix", LvLK3D.CamMatrix_Rot * LvLK3D.CamMatrix_Trans)
@@ -47,9 +48,10 @@ LvLK3D.SetShader("base")
 
 
 
-LvLK3D.NewShader("depthwrite", LvLK3D.RelaPath .. "/shader/mesh/depthwrite.frag", LvLK3D.RelaPath .. "/shader/mesh/depthwrite.vert", function(obj, shader)
+LvLK3D.NewShader("depthwrite", LvLK3D.RelaPath .. "/shader/mesh/depthwrite.frag", LvLK3D.RelaPath .. "/shader/mesh/generic.vert", function(obj, shader)
     shader:send("mdlRotationMatrix", obj.mat_rot)
-    shader:send("mdlTranslationMatrix", obj.mat_transscl)
+    shader:send("mdlTranslationMatrix", obj.mat_trs)
+    shader:send("mdlScaleMatrix", obj.mat_scl)
 
     shader:send("viewMatrix", LvLK3D.CamMatrix_Rot * LvLK3D.CamMatrix_Trans)
     shader:send("projectionMatrix", LvLK3D.CamMatrix_Proj)
@@ -57,9 +59,10 @@ LvLK3D.NewShader("depthwrite", LvLK3D.RelaPath .. "/shader/mesh/depthwrite.frag"
     shader:send("normInvert", (obj["NORM_INVERT"] == true) and true or false)
 end)
 
-LvLK3D.NewShader("ambientwrite", LvLK3D.RelaPath .. "/shader/mesh/ambientwrite.frag", LvLK3D.RelaPath .. "/shader/mesh/depthwrite.vert", function(obj, shader)
+LvLK3D.NewShader("ambientwrite", LvLK3D.RelaPath .. "/shader/mesh/ambientwrite.frag", LvLK3D.RelaPath .. "/shader/mesh/generic.vert", function(obj, shader)
     shader:send("mdlRotationMatrix", obj.mat_rot)
-    shader:send("mdlTranslationMatrix", obj.mat_transscl)
+    shader:send("mdlTranslationMatrix", obj.mat_trs)
+    shader:send("mdlScaleMatrix", obj.mat_scl)
 
     shader:send("viewMatrix", LvLK3D.CamMatrix_Rot * LvLK3D.CamMatrix_Trans)
     shader:send("projectionMatrix", LvLK3D.CamMatrix_Proj)
@@ -70,7 +73,8 @@ end)
 
 LvLK3D.NewShader("lit", LvLK3D.RelaPath .. "/shader/mesh/lit.frag", LvLK3D.RelaPath .. "/shader/mesh/generic.vert", function(obj, shader)
     shader:send("mdlRotationMatrix", obj.mat_rot)
-    shader:send("mdlTranslationMatrix", obj.mat_transscl)
+    shader:send("mdlTranslationMatrix", obj.mat_trs)
+    shader:send("mdlScaleMatrix", obj.mat_scl)
 
     --shader:send("mdlMatrix", obj.mat_mdl)
     shader:send("viewMatrix", LvLK3D.CamMatrix_Rot * LvLK3D.CamMatrix_Trans)
@@ -89,7 +93,8 @@ end)
 
 LvLK3D.NewShader("litsun", LvLK3D.RelaPath .. "/shader/mesh/litsun.frag", LvLK3D.RelaPath .. "/shader/mesh/generic.vert", function(obj, shader)
     shader:send("mdlRotationMatrix", obj.mat_rot)
-    shader:send("mdlTranslationMatrix", obj.mat_transscl)
+    shader:send("mdlTranslationMatrix", obj.mat_trs)
+    shader:send("mdlScaleMatrix", obj.mat_scl)
 
     --shader:send("mdlMatrix", obj.mat_mdl)
     shader:send("viewMatrix", LvLK3D.CamMatrix_Rot * LvLK3D.CamMatrix_Trans)

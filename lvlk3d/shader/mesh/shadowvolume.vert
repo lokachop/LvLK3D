@@ -6,6 +6,7 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 mdlRotationMatrix;
 uniform mat4 mdlTranslationMatrix;
+uniform mat4 mdlScaleMatrix;
 uniform bool normInvert;
 uniform vec3 lightPos;
 
@@ -21,7 +22,7 @@ varying vec3 vertexNormal;
 varying vec4 vertexColor;
 
 vec4 position(mat4 transformProjection, vec4 vertexPosition) {
-    mat4 mdlMatrix = mdlTranslationMatrix * mdlRotationMatrix;
+    mat4 mdlMatrix = mdlTranslationMatrix * mdlRotationMatrix * mdlScaleMatrix;
 
 
 
