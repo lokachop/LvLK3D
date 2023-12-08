@@ -1,16 +1,12 @@
 LvLK3D = LvLK3D or {}
 
-BASEDIR = love.filesystem.getRealDirectory("/"):match("(.-)[^%.]+$")
-BASEDIR = string.sub(BASEDIR, 1, string.len(BASEDIR) - 1)
-local myPath = BASEDIR.."/?.lua;"..BASEDIR.."/?.lua"
-local myPath2 = "?.lua;/?.lua"
-
-local myPathC = BASEDIR
+local myPath = "?.lua;?/init.lua"
+local myPathC = "?.dll;??"
 
 package.path = myPath
-love.filesystem.setRequirePath(myPath2)
-package.cpath = package.cpath .. ";" .. myPathC
-
+love.filesystem.setRequirePath(myPath)
+package.cpath = myPathC
+love.filesystem.setCRequirePath(myPathC)
 
 require("lvlk3d.lvlk3d")
 
@@ -404,7 +400,7 @@ function love.load()
 		["spread"] = -1,
 	})
 
-	local source = LvLK3D.PlaySound3D("sounds/ic2.wav", Vector(-4, 0, 0), 1, 1)
+	local source = LvLK3D.PlaySound3D("sounds/morse.wav", Vector(-4, 0, 0), 1, 1)
 	source:setLooping(true)
 	source:play()
 
@@ -468,7 +464,7 @@ local function throwCubes(dt)
 		LvLK3D.SetPhysicsObjectSurfaceMaterial(idx, "wood_box")
 
 		if not _radio then
-			_radio = LvLK3D.PlaySound3D("sounds/Enter the Maze.wav", Vector(0, 0, -16), 1, 3)
+			_radio = LvLK3D.PlaySound3D("sounds/Simplex.wav", Vector(0, 0, -16), 1, 3)
 			_radio:setLooping(true)
 			_radio:play()
 			LvLK3D.SetPhysicsObjectOnMoveCallback(idx, function(obj)

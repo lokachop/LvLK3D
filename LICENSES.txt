@@ -1,0 +1,53 @@
+---- CODE -----
+LvLK3D is licensed under the MIT license (see LICENSE)
+
+LvLK3D contains code from g3d (groverburger's 3D engin) which is licensed under the MIT license (https://github.com/groverburger/g3d)
+LvLK3D contains code from cpml (Cirno's Perfect Math Library) which is licensed under the MIT license (https://github.com/excessive/cpml)
+LvLK3D contains code from foolrenderer (fool renderer) which is licensed under the MIT license (https://github.com/cadenji/foolrenderer)
+
+
+---- SOUNDS ----
+
+Sound pack downloaded from Freesound
+----------------------------------------
+"Box Impact"
+
+This pack of sounds contains sounds by the following user:
+ - rolandasb ( https://freesound.org/people/rolandasb/ )
+
+You can find this pack online at: https://freesound.org/people/rolandasb/packs/10613/
+
+Licenses in this pack
+---------------------------------------------------------------
+Creative Commons 0: http://creativecommons.org/publicdomain/zero/1.0/
+
+
+Sound pack downloaded from Freesound
+----------------------------------------
+"nlux radio music loops"
+
+This pack of sounds contains sounds by the following user:
+ - nlux ( https://freesound.org/people/nlux/ )
+
+You can find this pack online at: https://freesound.org/people/nlux/packs/34302/
+
+Licenses in this pack
+---------------------------------------------------------------
+Attribution 4.0: https://creativecommons.org/licenses/by/4.0/
+
+
+"Foley_Impact_Metal_Long_Mono.wav" by Nox_Sound (https://freesound.org/people/Nox_Sound/)
+Licensed under Creative Commons: 0 License
+http://creativecommons.org/publicdomain/zero/1.0/
+
+"Enter the Maze" Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+http://creativecommons.org/licenses/by/4.0/
+
+"Simplex" Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+http://creativecommons.org/licenses/by/4.0/
+
+"Space Jazz" Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+http://creativecommons.org/licenses/by/4.0/

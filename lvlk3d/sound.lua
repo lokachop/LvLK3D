@@ -1,7 +1,7 @@
 LvLK3D = LvLK3D or {}
 
 love.audio.setDistanceModel("exponent")
-love.audio.setDopplerScale(1)
+love.audio.setDopplerScale(.5)
 
 LvLK3D.ValidSources = {}
 LvLK3D.ActiveSources = {}
