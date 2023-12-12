@@ -85,21 +85,28 @@ local lightingShaderSun = LvLK3D.GetShader("litsun")
 local shadowShaderSun = LvLK3D.GetShader("shadowvolumesun")
 local shadowShaderCapSun = LvLK3D.GetShader("shadowcapsun")
 
+
+local _MAX_ITR = 1024 * 2
+
 local function renderActiveUniverseLit()
     local worldParams = LvLK3D.CurrUniv["worldParameteri"]
 
     local _renderShadowed = {}
-    for k, v in pairs(LvLK3D.CurrUniv["objects"]) do
-        if v["FULLBRIGHT"] then
-            renderObject(v, depthWriteShader)
-        else
-            v["LIT_AMBIENT"] = worldParams.ambientCol
-            renderObject(v, ambientWriteShader)
+    for i = 1, _MAX_ITR do
+        local obj = LvLK3D.CurrUniv["objects"][i]
+
+        if obj and obj["FULLBRIGHT"] then
+            renderObject(obj, depthWriteShader)
+        elseif obj then
+            obj["LIT_AMBIENT"] = worldParams.ambientCol
+            renderObject(obj, ambientWriteShader)
         end
 
-        if v.SHADOW_VOLUME then
-            _renderShadowed[#_renderShadowed + 1] = v
+        if obj and obj.SHADOW_VOLUME then
+            _renderShadowed[#_renderShadowed + 1] = obj
         end
+
+        ::_contRenderLit1::
     end
 
     -- additive...
@@ -115,21 +122,25 @@ local function renderActiveUniverseLit()
         -- shadow volume cutouts done! render with lights...
         love.graphics.setDepthMode("lequal", true)
         love.graphics.setStencilTest("equal", 0)
-            for k2, v2 in pairs(LvLK3D.CurrUniv["objects"]) do
-                if v2["FULLBRIGHT"] then
-                    renderObject(v2)
-                else
-                    v2["LIT_LIGHT_POS"] = -worldParams["sunDir"]
-                    v2["LIT_LIGHT_COL"] = worldParams["sunCol"]
+            for i = 1, _MAX_ITR do
+                local obj2 = LvLK3D.CurrUniv["objects"][i]
 
-                    renderObject(v2, lightingShaderSun)
+                if obj2 and obj2["FULLBRIGHT"] then
+                    renderObject(obj2)
+                elseif obj2 then
+                    obj2["LIT_LIGHT_POS"] = -worldParams["sunDir"]
+                    obj2["LIT_LIGHT_COL"] = worldParams["sunCol"]
+
+                    renderObject(obj2, lightingShaderSun)
                 end
             end
         love.graphics.setStencilTest()
     else
-        for k2, v2 in pairs(LvLK3D.CurrUniv["objects"]) do
-            if v2["FULLBRIGHT"] then
-                renderObject(v2)
+        for i = 1, _MAX_ITR do
+            local obj3 = LvLK3D.CurrUniv["objects"][i]
+
+            if obj3 and obj3["FULLBRIGHT"] then
+                renderObject(obj3)
             end
         end
     end
@@ -175,9 +186,14 @@ end
 
 local function renderActiveUniverseNonLit()
     local _renderShadowed = {}
-    for k, v in pairs(LvLK3D.CurrUniv["objects"]) do
-        love.graphics.setDepthMode("lequal", true)
-        renderObject(v)
+
+    for i = 1, _MAX_ITR do
+        local obj = LvLK3D.CurrUniv["objects"][i]
+
+        if obj then
+            love.graphics.setDepthMode("lequal", true)
+            renderObject(v)
+        end
     end
 
 end

@@ -98,6 +98,24 @@ LvLK3D.NewSurfaceMaterial("wood_box", {
     },
 })
 
+LvLK3D.NewSurfaceMaterial("ice", {
+    ["sound_list"] = {
+        "sounds/physics/wood/wood_box1.wav",
+        "sounds/physics/wood/wood_box2.wav",
+        "sounds/physics/wood/wood_box3.wav",
+        "sounds/physics/wood/wood_box4.wav",
+        "sounds/physics/wood/wood_box5.wav",
+    },
+    ["ode_params"] = {
+        mu = 250.0,
+        slip1 = 1.1,
+        slip2 = 1.1,
+        soft_erp = 0.96,
+        soft_cfm = 0.04,
+        approx1 = true,
+    },
+})
+
 function LvLK3D.SetupPhysicsWorld(univ)
 
     univ.odePhys = {
@@ -168,6 +186,33 @@ function LvLK3D.NewPhysicsBox(name, size)
 end
 
 
+function LvLK3D.NewPhysicsCapsule(name, radius, len)
+    local univ = LvLK3D.CurrUniv
+    if not univ.odePhys then
+        return
+    end
+
+    local box = ode.create_capsule(nil, radius, len)
+    local body = ode.create_body(univ.odePhys.world)
+
+    body:set_mass(ode.mass_capsule(1, "y", radius, len))
+    box:set_body(body)
+
+    univ.odePhys.space:add(box)
+
+    univ.odePhys.objects[name] = {
+        otype = "capsule",
+        body = body,
+        radius = radius,
+        len = len,
+        linked = nil,
+        surftype = "metal",
+    }
+
+    univ.odePhys.body2objects[body] = name
+end
+
+
 function LvLK3D.SetPhysicsObjectSurfaceMaterial(name, material)
     local univ = LvLK3D.CurrUniv
     if not univ.odePhys then
@@ -194,6 +239,9 @@ end
 local _massTypeSetters = {
     ["box"] = function(obj, mass)
         obj.body:set_mass(ode.mass_box(mass, obj.size[1], obj.size[2], obj.size[3], mass))
+    end,
+    ["capsule"] = function(obj, mass)
+        obj.body:set_mass(ode.mass_capsule(mass, "y", obj.radius, obj.len))
     end
 }
 
@@ -325,18 +373,18 @@ end
 -- Linked objects
 -- these just update the transforms of nameVis to look as if they were in namePhys's location
 -- you can unlink them too
-function LvLK3D.SetLinkedObject(namePhys, nameVis)
+function LvLK3D.SetLinkedObject(namePhys, indexVis)
     local univ = LvLK3D.CurrUniv
     if not univ.odePhys then
         return
     end
 
-    univ.odePhys.objects[namePhys].linked = nameVis
-    LvLK3D.CurrUniv["objects"][nameVis]._linkedPhys = namePhys
+    univ.odePhys.objects[namePhys].linked = indexVis
+    LvLK3D.CurrUniv["objects"][indexVis]._linkedPhys = namePhys
 end
 
-function LvLK3D.SetLinkedOffset(name, offset)
-    LvLK3D.CurrUniv["objects"][name]._linkedOffset = offset or Vector(0, 0, 0)
+function LvLK3D.SetLinkedOffset(index, offset)
+    LvLK3D.CurrUniv["objects"][index]._linkedOffset = offset or Vector(0, 0, 0)
 end
 
 function LvLK3D.SetPhysicsObjectOnMoveCallback(name, callback)
@@ -350,8 +398,8 @@ end
 
 
 
-function LvLK3D.GetLinkedObjectPhys(nameVis)
-    return LvLK3D.CurrUniv["objects"][nameVis]._linkedPhys
+function LvLK3D.GetLinkedObjectPhys(indexVis)
+    return LvLK3D.CurrUniv["objects"][indexVis]._linkedPhys
 end
 
 function LvLK3D.GetLinkedObjectVis(namePhys)
@@ -533,17 +581,15 @@ function LvLK3D.PhysicsThink(dt)
 end
 
 
-local function addPhysRender(k, obj)
-    local idx = "physobj_" .. k
-
-    LvLK3D.AddObjectToUniv(idx, "cube")
-    LvLK3D.SetObjectPos(idx, Vector(0, 0, 0))
-    LvLK3D.SetObjectMat(idx, "white")
-    LvLK3D.SetObjectFlag(idx, "SHADING", true)
-    LvLK3D.SetObjectFlag(idx, "NO_TRACE", false)
-    LvLK3D.SetObjectScl(idx, obj.size)
-    LvLK3D.UpdateObjectMesh(idx)
-    LvLK3D.SetObjectShadow(idx, true)
+local function addPhysRender(index, obj)
+    local visIdx = LvLK3D.AddObjectToUniv("physobj_" .. index, "cube")
+    LvLK3D.SetObjectPos(visIdx, Vector(0, 0, 0))
+    LvLK3D.SetObjectMat(visIdx, "white")
+    LvLK3D.SetObjectFlag(visIdx, "SHADING", true)
+    LvLK3D.SetObjectFlag(visIdx, "NO_TRACE", false)
+    LvLK3D.SetObjectScl(visIdx, obj.size)
+    LvLK3D.UpdateObjectMesh(visIdx)
+    LvLK3D.SetObjectShadow(visIdx, true)
 end
 
 function LvLK3D.PhysicsDebugRender()
@@ -553,7 +599,7 @@ function LvLK3D.PhysicsDebugRender()
     end
 
     for k, v in pairs(univ.odePhys.objects) do
-        local idx = "physobj_" .. k
+        local idx = LvLK3D.GetObjectByName("physobj_" .. k)
         if not LvLK3D.CurrUniv["objects"][idx] then
             addPhysRender(k, v)
         end

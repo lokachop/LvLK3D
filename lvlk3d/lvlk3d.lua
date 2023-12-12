@@ -38,3 +38,5 @@ LvLK3D.LoadFile("physics")
 
 LvLK3D.LoadFile("camera")
 LvLK3D.LoadFile("render")
+
+LvLK3D.LoadFile("playercontroller")

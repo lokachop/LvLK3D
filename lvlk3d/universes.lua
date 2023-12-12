@@ -7,6 +7,7 @@ function LvLK3D.NewUniverse(tag)
     end
 
     local univData = {
+        ["objectIDLUT"] = {},
         ["objects"] = {},
         ["lights"] = {},
         ["lightCount"] = 0,

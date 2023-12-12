@@ -130,7 +130,7 @@ function love.load()
 
 
 	LvLK3D.PushUniverse(UnivTest)
-		LvLK3D.SetSunLighting(true) -- dont do sun lighting
+		LvLK3D.SetSunLighting(false) -- dont do sun lighting
 		LvLK3D.SetSunCol({0.5, 0.5, 0.5}) -- set col to weird yellow
 		LvLK3D.SetSunDir(Vector(0.25, -1, -0.5):GetNormalized())
 		LvLK3D.SetAmbientCol({.1, .1, .1}) -- ambient to darker weird yellow
@@ -138,132 +138,123 @@ function love.load()
 
 
 
-		--LvLK3D.AddLightToUniv("LightOne", Vector(0, 3, 2), 4, {0.25, 0.25, 1})
-		--LvLK3D.AddLightToUniv("LightTwo", Vector(2, 3, -2), 4, {0.25, 1, 0.25})
-		--LvLK3D.AddLightToUniv("LightThree", Vector(-2, 3, -2), 4, {1, 0.25, 0.25})
+		LvLK3D.AddLightToUniv("LightOne", Vector(0, 3, 2), 4, {0.25, 0.25, 1})
+		LvLK3D.AddLightToUniv("LightTwo", Vector(2, 3, -2), 4, {0.25, 1, 0.25})
+		LvLK3D.AddLightToUniv("LightThree", Vector(-2, 3, -2), 4, {1, 0.25, 0.25})
 
 
 
-		LvLK3D.AddObjectToUniv("cube1", "cube")
-		LvLK3D.SetObjectPos("cube1", Vector(0, 0, 0))
-		LvLK3D.SetObjectMat("cube1", "happyPNGTest")
-		LvLK3D.SetObjectFlag("cube1", "SHADING", true)
-		LvLK3D.SetObjectFlag("cube1", "SHADING_SMOOTH", false)
-		LvLK3D.SetObjectFlag("cube1", "NORM_INVERT", false)
-		LvLK3D.SetObjectFlag("cube1", "FULLBRIGHT", false)
-		LvLK3D.SetObjectScl("cube1", Vector(.5, .5, .5))
-		LvLK3D.UpdateObjectMesh("cube1")
-		LvLK3D.SetObjectShadow("cube1", true)
+		local idxCube = LvLK3D.AddObjectToUniv("cube1", "cube")
+		LvLK3D.SetObjectPos(idxCube, Vector(0, 0, 0))
+		LvLK3D.SetObjectMat(idxCube, "happyPNGTest")
+		LvLK3D.SetObjectFlag(idxCube, "SHADING", true)
+		LvLK3D.SetObjectFlag(idxCube, "SHADING_SMOOTH", false)
+		LvLK3D.SetObjectFlag(idxCube, "NORM_INVERT", false)
+		LvLK3D.SetObjectFlag(idxCube, "FULLBRIGHT", false)
+		LvLK3D.SetObjectScl(idxCube, Vector(.5, .5, .5))
+		LvLK3D.UpdateObjectMesh(idxCube)
+		LvLK3D.SetObjectShadow(idxCube, true)
 
-		LvLK3D.AddObjectToUniv("cube_tr", "cube")
-		LvLK3D.SetObjectPos("cube_tr", Vector(0, 0, 0))
-		LvLK3D.SetObjectMat("cube_tr", "happyPNGTest")
-		LvLK3D.SetObjectFlag("cube_tr", "SHADING", true)
-		LvLK3D.SetObjectFlag("cube_tr", "NO_TRACE", true)
-		LvLK3D.SetObjectScl("cube_tr", Vector(.1, .1, .1))
-		LvLK3D.UpdateObjectMesh("cube_tr")
-		LvLK3D.SetObjectShadow("cube_tr", true)
-
-		LvLK3D.AddObjectToUniv("cube_tr_dir", "cube")
-		LvLK3D.SetObjectPos("cube_tr_dir", Vector(0, 0, 0))
-		LvLK3D.SetObjectMat("cube_tr_dir", "happyPNGTest")
-		LvLK3D.SetObjectFlag("cube_tr_dir", "SHADING", true)
-		LvLK3D.SetObjectFlag("cube_tr_dir", "NO_TRACE", true)
-		LvLK3D.SetObjectScl("cube_tr_dir", Vector(.1, .1, .1))
-		LvLK3D.UpdateObjectMesh("cube_tr_dir")
-		LvLK3D.SetObjectShadow("cube_tr_dir", true)
+		local cubeTr = LvLK3D.AddObjectToUniv("cube_tr", "cube")
+		LvLK3D.SetObjectPos(cubeTr, Vector(0, 0, 0))
+		LvLK3D.SetObjectMat(cubeTr, "happyPNGTest")
+		LvLK3D.SetObjectFlag(cubeTr, "SHADING", true)
+		LvLK3D.SetObjectFlag(cubeTr, "NO_TRACE", true)
+		LvLK3D.SetObjectScl(cubeTr, Vector(.1, .1, .1))
+		LvLK3D.UpdateObjectMesh(cubeTr)
+		LvLK3D.SetObjectShadow(cubeTr, true)
 
 
 
-		LvLK3D.AddObjectToUniv("plane_floor", "plane")
-		LvLK3D.SetObjectPos("plane_floor", Vector(0, -4, 0))
-		LvLK3D.SetObjectScl("plane_floor", Vector(256, 1, 256))
-		LvLK3D.SetObjectMat("plane_floor", "mandrill")
-		LvLK3D.SetObjectFlag("plane_floor", "SHADING", true)
-		LvLK3D.UpdateObjectMesh("plane_floor")
+		local planeFloor = LvLK3D.AddObjectToUniv("plane_floor", "plane")
+		LvLK3D.SetObjectPos(planeFloor, Vector(0, -4, 0))
+		LvLK3D.SetObjectScl(planeFloor, Vector(256, 1, 256))
+		LvLK3D.SetObjectMat(planeFloor, "mandrill")
+		LvLK3D.SetObjectFlag(planeFloor, "SHADING", true)
+		LvLK3D.UpdateObjectMesh(planeFloor)
 
-		LvLK3D.AddObjectToUniv("lktest", "lokachop_sqr")
-		LvLK3D.SetObjectPos("lktest", Vector(0, 0, 0))
-		LvLK3D.SetObjectScl("lktest", Vector(1, 1, 1))
-		LvLK3D.SetObjectMat("lktest", "loka_sheet")
-		LvLK3D.SetObjectFlag("lktest", "SHADING", true)
-		LvLK3D.SetObjectFlag("lktest", "FULLBRIGHT", false)
-		LvLK3D.UpdateObjectMesh("lktest")
-		--LvLK3D.SetObjectShadow("lktest", true)
-
-
-		LvLK3D.AddObjectToUniv("lktest2", "cube_dae")
-		LvLK3D.SetObjectPos("lktest2", Vector(0, -1, -8))
-		LvLK3D.SetObjectScl("lktest2", Vector(1, 1, 1))
-		LvLK3D.SetObjectMat("lktest2", "white")
-		LvLK3D.SetObjectFlag("lktest2", "SHADING", true)
-		LvLK3D.SetObjectFlag("lktest2", "FULLBRIGHT", false)
-		LvLK3D.UpdateObjectMesh("lktest2")
-
-		LvLK3D.AddObjectToUniv("cube_floor", "cube")
-		LvLK3D.SetObjectPos("cube_floor", Vector(0, -2, -2.75))
-		LvLK3D.SetObjectMat("cube_floor", "procMarble")
-		LvLK3D.SetObjectFlag("cube_floor", "SHADING", false)
-		LvLK3D.SetObjectFlag("cube_floor", "SHADING_SMOOTH", false)
-		LvLK3D.SetObjectFlag("cube_floor", "NORM_INVERT", false)
-		LvLK3D.SetObjectFlag("cube_floor", "FULLBRIGHT", false)
-		LvLK3D.UpdateObjectMesh("cube_floor")
-		LvLK3D.SetObjectShadow("cube_floor", true)
-
-		LvLK3D.AddObjectToUniv("train", "train")
-		LvLK3D.SetObjectPos("train", Vector(4, -2.05, -3))
-		LvLK3D.SetObjectMat("train", "train_sheet")
-		LvLK3D.SetObjectFlag("train", "SHADING", true)
-		LvLK3D.SetObjectFlag("train", "SHADING_SMOOTH", true)
-		LvLK3D.SetObjectFlag("train", "FULLBRIGHT", false)
-		LvLK3D.UpdateObjectMesh("train")
-		LvLK3D.SetObjectShadow("train", true)
-
-		LvLK3D.AddObjectToUniv("cube_source_dynamic", "cube")
-		LvLK3D.SetObjectPos("cube_source_dynamic", Vector(0, 0, 16))
-		LvLK3D.SetObjectScl("cube_source_dynamic", Vector(0.5, 0.5, 0.5))
-		LvLK3D.SetObjectMat("cube_source_dynamic", "The_name")
-		LvLK3D.SetObjectFlag("cube_source_dynamic", "SHADING", false)
-		LvLK3D.SetObjectFlag("cube_source_dynamic", "SHADING_SMOOTH", false)
-		LvLK3D.SetObjectFlag("cube_source_dynamic", "NORM_INVERT", false)
-		LvLK3D.SetObjectFlag("cube_source_dynamic", "FULLBRIGHT", false)
-		LvLK3D.UpdateObjectMesh("cube_source_dynamic")
-		LvLK3D.SetObjectShadow("cube_source_dynamic", true)
+		local lkTest = LvLK3D.AddObjectToUniv("lktest", "lokachop_sqr")
+		LvLK3D.SetObjectPos(lkTest, Vector(0, 0, 0))
+		LvLK3D.SetObjectScl(lkTest, Vector(1, 1, 1))
+		LvLK3D.SetObjectMat(lkTest, "loka_sheet")
+		LvLK3D.SetObjectFlag(lkTest, "SHADING", true)
+		LvLK3D.SetObjectFlag(lkTest, "FULLBRIGHT", false)
+		LvLK3D.UpdateObjectMesh(lkTest)
+		LvLK3D.SetObjectShadow(lkTest, true)
 
 
+		local lkTest2 = LvLK3D.AddObjectToUniv("lktest2", "cube_dae")
+		LvLK3D.SetObjectPos(lkTest2, Vector(0, -1, -8))
+		LvLK3D.SetObjectScl(lkTest2, Vector(1, 1, 1))
+		LvLK3D.SetObjectMat(lkTest2, "white")
+		LvLK3D.SetObjectFlag(lkTest2, "SHADING", true)
+		LvLK3D.SetObjectFlag(lkTest2, "FULLBRIGHT", false)
+		LvLK3D.UpdateObjectMesh(lkTest2)
 
-		LvLK3D.AddObjectToUniv("cube_room", "cube")
-		LvLK3D.SetObjectPos("cube_room", Vector(0, 0, -16))
-		LvLK3D.SetObjectScl("cube_room", Vector(4.5, 4.5, 4.5))
-		LvLK3D.SetObjectMat("cube_room", "procMarble")
-		LvLK3D.SetObjectFlag("cube_room", "SHADING", false)
-		LvLK3D.SetObjectFlag("cube_room", "SHADING_SMOOTH", false)
-		LvLK3D.SetObjectFlag("cube_room", "NORM_INVERT", true)
-		LvLK3D.SetObjectFlag("cube_room", "FULLBRIGHT", false)
-		LvLK3D.UpdateObjectMesh("cube_room")
+		local cubeFloor = LvLK3D.AddObjectToUniv("cube_floor", "cube")
+		LvLK3D.SetObjectPos(cubeFloor, Vector(0, -2, -2.75))
+		LvLK3D.SetObjectMat(cubeFloor, "procMarble")
+		LvLK3D.SetObjectFlag(cubeFloor, "SHADING", false)
+		LvLK3D.SetObjectFlag(cubeFloor, "SHADING_SMOOTH", false)
+		LvLK3D.SetObjectFlag(cubeFloor, "NORM_INVERT", false)
+		LvLK3D.SetObjectFlag(cubeFloor, "FULLBRIGHT", false)
+		LvLK3D.UpdateObjectMesh(cubeFloor)
+		LvLK3D.SetObjectShadow(cubeFloor, true)
+
+		local train = LvLK3D.AddObjectToUniv("train", "train")
+		LvLK3D.SetObjectPos(train, Vector(4, -2.05, -3))
+		LvLK3D.SetObjectMat(train, "train_sheet")
+		LvLK3D.SetObjectFlag(train, "SHADING", true)
+		LvLK3D.SetObjectFlag(train, "SHADING_SMOOTH", true)
+		LvLK3D.SetObjectFlag(train, "FULLBRIGHT", false)
+		LvLK3D.UpdateObjectMesh(train)
+		LvLK3D.SetObjectShadow(train, true)
+
+		local dynamicSourceCube = LvLK3D.AddObjectToUniv("cube_source_dynamic", "cube")
+		LvLK3D.SetObjectPos(dynamicSourceCube, Vector(0, 0, 16))
+		LvLK3D.SetObjectScl(dynamicSourceCube, Vector(0.5, 0.5, 0.5))
+		LvLK3D.SetObjectMat(dynamicSourceCube, "The_name")
+		LvLK3D.SetObjectFlag(dynamicSourceCube, "SHADING", false)
+		LvLK3D.SetObjectFlag(dynamicSourceCube, "SHADING_SMOOTH", false)
+		LvLK3D.SetObjectFlag(dynamicSourceCube, "NORM_INVERT", false)
+		LvLK3D.SetObjectFlag(dynamicSourceCube, "FULLBRIGHT", false)
+		LvLK3D.UpdateObjectMesh(dynamicSourceCube)
+		LvLK3D.SetObjectShadow(dynamicSourceCube, true)
 
 
 
-		LvLK3D.AddObjectToUniv("cube_room2", "cube")
-		LvLK3D.SetObjectPos("cube_room2", Vector(16, 0, 0))
-		LvLK3D.SetObjectScl("cube_room2", Vector(2.5, 2.5, 2.5))
-		LvLK3D.SetObjectMat("cube_room2", "procMarble")
-		LvLK3D.SetObjectFlag("cube_room2", "SHADING", false)
-		LvLK3D.SetObjectFlag("cube_room2", "SHADING_SMOOTH", false)
-		LvLK3D.SetObjectFlag("cube_room2", "NORM_INVERT", true)
-		LvLK3D.SetObjectFlag("cube_room2", "FULLBRIGHT", false)
-		LvLK3D.UpdateObjectMesh("cube_room2")
+		local roomCube1 = LvLK3D.AddObjectToUniv("cube_room", "cube")
+		LvLK3D.SetObjectPos(roomCube1, Vector(0, 0, -16))
+		LvLK3D.SetObjectScl(roomCube1, Vector(4.5, 4.5, 4.5))
+		LvLK3D.SetObjectMat(roomCube1, "procMarble")
+		LvLK3D.SetObjectFlag(roomCube1, "SHADING", false)
+		LvLK3D.SetObjectFlag(roomCube1, "SHADING_SMOOTH", false)
+		LvLK3D.SetObjectFlag(roomCube1, "NORM_INVERT", true)
+		LvLK3D.SetObjectFlag(roomCube1, "FULLBRIGHT", false)
+		LvLK3D.UpdateObjectMesh(roomCube1)
 
 
-		LvLK3D.AddObjectToUniv("cube_room3", "cube")
-		LvLK3D.SetObjectPos("cube_room3", Vector(-32, 0, 0))
-		LvLK3D.SetObjectScl("cube_room3", Vector(8.5, 8.5, 8.5))
-		LvLK3D.SetObjectMat("cube_room3", "bad_nouise")
-		LvLK3D.SetObjectFlag("cube_room3", "SHADING", false)
-		LvLK3D.SetObjectFlag("cube_room3", "SHADING_SMOOTH", false)
-		LvLK3D.SetObjectFlag("cube_room3", "NORM_INVERT", true)
-		LvLK3D.SetObjectFlag("cube_room3", "FULLBRIGHT", false)
-		LvLK3D.UpdateObjectMesh("cube_room3")
+
+		local roomCube2 = LvLK3D.AddObjectToUniv("cube_room2", "cube")
+		LvLK3D.SetObjectPos(roomCube2, Vector(16, 0, 0))
+		LvLK3D.SetObjectScl(roomCube2, Vector(2.5, 2.5, 2.5))
+		LvLK3D.SetObjectMat(roomCube2, "procMarble")
+		LvLK3D.SetObjectFlag(roomCube2, "SHADING", false)
+		LvLK3D.SetObjectFlag(roomCube2, "SHADING_SMOOTH", false)
+		LvLK3D.SetObjectFlag(roomCube2, "NORM_INVERT", true)
+		LvLK3D.SetObjectFlag(roomCube2, "FULLBRIGHT", false)
+		LvLK3D.UpdateObjectMesh(roomCube2)
+
+
+		local roomCube3 = LvLK3D.AddObjectToUniv("cube_room3", "cube")
+		LvLK3D.SetObjectPos(roomCube3, Vector(-32, 0, 0))
+		LvLK3D.SetObjectScl(roomCube3, Vector(8.5, 8.5, 8.5))
+		LvLK3D.SetObjectMat(roomCube3, "bad_nouise")
+		LvLK3D.SetObjectFlag(roomCube3, "SHADING", false)
+		LvLK3D.SetObjectFlag(roomCube3, "SHADING_SMOOTH", false)
+		LvLK3D.SetObjectFlag(roomCube3, "NORM_INVERT", true)
+		LvLK3D.SetObjectFlag(roomCube3, "FULLBRIGHT", false)
+		LvLK3D.UpdateObjectMesh(roomCube3)
 
 
 		--LvLK3D.AddObjectToUniv("rail", "traintrack")
@@ -282,8 +273,7 @@ function love.load()
 				LvLK3D.SetPhysicsObjectStatic(idxPhys, true)
 			end
 
-			local idxVis = name .. "_vis"
-			LvLK3D.AddObjectToUniv(idxVis, "cube")
+			local idxVis = LvLK3D.AddObjectToUniv(name .. "_vis", "cube")
 			LvLK3D.SetObjectPos(idxVis, Vector(0, 0, 0))
 			LvLK3D.SetObjectMat(idxVis, "white")
 			LvLK3D.SetObjectFlag(idxVis, "SHADING", true)
@@ -297,8 +287,7 @@ function love.load()
 
 		physAndLinked("boxA", Vector(0, 12, 8.25), Angle(0, 45, 0), Vector(.4, .2, .4), false, 1)
 		physAndLinked("boxC", Vector(0, 16, 8), Angle(0, 0, 0), Vector(.4, 1.6, .4), false, 1)
-		physAndLinked("boxD", Vector(0, 16, 7), Angle(0, 0, 0), Vector(.1, 2.6, .1), false, 1)
-
+		physAndLinked("boxD", Vector(0, 16, 7), Angle(0, 0, 0), Vector(.1, 0.6, .1), false, 1)
 
 		-- static box
 		local sbox_size = 4
@@ -324,15 +313,14 @@ function love.load()
 
 
 		for k, v in pairs(LvLK3D.CurrUniv["lights"]) do
-			local idx = "lightID " .. v.tag
-			LvLK3D.AddObjectToUniv(idx, "cube")
-			LvLK3D.SetObjectPos(idx, v.pos)
-			LvLK3D.SetObjectMat(idx, "white")
+			local idxLight = LvLK3D.AddObjectToUniv("lightID " .. v.tag, "cube")
+			LvLK3D.SetObjectPos(idxLight, v.pos)
+			LvLK3D.SetObjectMat(idxLight, "white")
 
-			LvLK3D.SetObjectFlag(idx, "SHADING", false)
-			LvLK3D.SetObjectFlag(idx, "FULLBRIGHT", true)
-			LvLK3D.SetObjectScl(idx, Vector(.1, .1, .1))
-			LvLK3D.SetObjectCol(idx, v.col)
+			LvLK3D.SetObjectFlag(idxLight, "SHADING", false)
+			LvLK3D.SetObjectFlag(idxLight, "FULLBRIGHT", true)
+			LvLK3D.SetObjectScl(idxLight, Vector(.1, .1, .1))
+			LvLK3D.SetObjectCol(idxLight, v.col)
 		end
 	LvLK3D.PopUniverse()
 
@@ -476,8 +464,7 @@ local function throwCubes(dt)
 			end)
 		end
 
-		local idxVis = "throwVis" .. _throwIdx
-		LvLK3D.AddObjectToUniv(idxVis, "lokachop_sqr")
+		local idxVis = LvLK3D.AddObjectToUniv("throwVis" .. _throwIdx, "lokachop_sqr")
 		LvLK3D.SetObjectPos(idxVis, Vector(0, 0, 0))
 		LvLK3D.SetObjectScl(idxVis, Vector(.4, .4, .4))
 		LvLK3D.SetObjectMat(idxVis, "loka_sheet")
@@ -485,7 +472,7 @@ local function throwCubes(dt)
 		LvLK3D.SetObjectFlag(idxVis, "SHADING_SMOOTH", false)
 		LvLK3D.SetObjectFlag(idxVis, "FULLBRIGHT", false)
 		LvLK3D.UpdateObjectMesh(idxVis)
-		LvLK3D.SetObjectShadow(idxVis, true)
+		LvLK3D.SetObjectShadow(idxVis, false)
 
 
 		LvLK3D.SetLinkedObject(idx, idxVis)
@@ -529,8 +516,10 @@ local function grabCubes(dt)
 			local offReal = camPos + (dir * _offsetGrab)
 
 			local diff = offReal - LvLK3D.GetPhysicsObjectPos(grabbedObject)
+			local vel = LvLK3D.GetPhysicsObjectVel(grabbedObject)
 
-			LvLK3D.SetPhysicsObjectVel(grabbedObject, diff * 32)
+
+			LvLK3D.SetPhysicsObjectVel(grabbedObject, (diff - (vel * .025)) * dt * 640)
 			--LvLK3D.SetPhysicsObjectAng(grabbedObject, dir * 180)
 		else
 			_selected = nil
@@ -571,14 +560,15 @@ function love.update(dt)
 		--LvLK3D.SetObjectPos("cube_tr", pos + (norm * .1))
 
 
-		LvLK3D.SetObjectAng("lktest", Angle(CurTime * 24, CurTime * 32, 0))
+		LvLK3D.SetObjectAng(LvLK3D.GetObjectByName("lktest"), Angle(CurTime * 24, CurTime * 32, 0))
 
-		LvLK3D.SetObjectAng("cube1", Angle(CurTime * 24, CurTime * 32, 0))
-		LvLK3D.SetObjectPos("cube1", Vector(math.sin(CurTime * .75) * 2.65, 0, math.cos(CurTime * .4532) * 2.5))
+		local cube1 = LvLK3D.GetObjectByName("cube1")
+		LvLK3D.SetObjectAng(cube1, Angle(CurTime * 24, CurTime * 32, 0))
+		LvLK3D.SetObjectPos(cube1, Vector(math.sin(CurTime * .75) * 2.65, 0, math.cos(CurTime * .4532) * 2.5))
 
 
 		local pCube = Vector(math.sin(CurTime * 1.75) * 2.65, 0, (math.cos(CurTime * 1.4532) * 2.5) - 16)
-		LvLK3D.SetObjectPos("cube_source_dynamic", pCube)
+		LvLK3D.SetObjectPos(LvLK3D.GetObjectByName("cube_source_dynamic"), pCube)
 		LvLK3D.SetSourcePosition(Source3_Dynamic, pCube)
 		--updateLightAndExShadow("LightOne", Vector(math.cos(CurTime * .65) * 5.6546, 3, math.sin(CurTime * .7645767) * 6.523))
 		--updateLightAndExShadow("LightTwo", Vector(math.cos(CurTime * 1.85) * 8.6546, math.sin(CurTime * 1.24) + 3, math.sin(CurTime * 1.2645767) * 10.523))

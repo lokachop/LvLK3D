@@ -70,7 +70,13 @@ function LvLK3D.AddObjectToUniv(name, mdl)
 	local mat_mdl = Matrix()
 	mat_mdl:Identity()
 
-	LvLK3D.CurrUniv["objects"][name] = {
+	local objs = LvLK3D.CurrUniv["objects"]
+	local index = #objs + 1
+
+	LvLK3D.CurrUniv["objectIDLUT"][name] = index
+
+
+	objs[index] = {
 		name = name,
 		mdl = mdl,
 		pos = Vector(0, 0, 0),
@@ -90,7 +96,9 @@ function LvLK3D.AddObjectToUniv(name, mdl)
 	setupModelMatrix(obj.mat_mdl, obj.pos, obj.ang, obj.scl)
 	]]--
 
-	initMesh(LvLK3D.CurrUniv["objects"][name])
+	initMesh(LvLK3D.CurrUniv["objects"][index])
+
+	return index
 end
 
 local function recalculateObjectMatrices(obj)
@@ -98,12 +106,12 @@ local function recalculateObjectMatrices(obj)
 end
 
 -- DONT USE THIS, INTERNAL
-function LvLK3D.__recalculateObjectMatrices(name)
-	recalculateObjectMatrices(LvLK3D.CurrUniv["objects"][name])
+function LvLK3D.__recalculateObjectMatrices(index)
+	recalculateObjectMatrices(LvLK3D.CurrUniv["objects"][index])
 end
 
-function LvLK3D.SetObjectPos(name, pos)
-	local obj = LvLK3D.CurrUniv["objects"][name]
+function LvLK3D.SetObjectPos(index, pos)
+	local obj = LvLK3D.CurrUniv["objects"][index]
 
 	obj.pos = pos or Vector(0, 0, 0)
 
@@ -112,8 +120,8 @@ function LvLK3D.SetObjectPos(name, pos)
 	recalculateObjectMatrices(obj)
 end
 
-function LvLK3D.SetObjectAng(name, ang)
-	local obj = LvLK3D.CurrUniv["objects"][name]
+function LvLK3D.SetObjectAng(index, ang)
+	local obj = LvLK3D.CurrUniv["objects"][index]
 
 	obj.ang = ang or Angle(0, 0, 0)
 
@@ -122,8 +130,8 @@ function LvLK3D.SetObjectAng(name, ang)
 	---mat_mdl
 end
 
-function LvLK3D.SetObjectPosAng(name, pos, ang)
-	local obj = LvLK3D.CurrUniv["objects"][name]
+function LvLK3D.SetObjectPosAng(index, pos, ang)
+	local obj = LvLK3D.CurrUniv["objects"][index]
 
 	obj.pos = pos or Vector(0, 0, 0)
 	obj.ang = ang or Angle(0, 0, 0)
@@ -134,8 +142,8 @@ function LvLK3D.SetObjectPosAng(name, pos, ang)
 	recalculateObjectMatrices(obj)
 end
 
-function LvLK3D.SetObjectScl(name, scl)
-	local obj = LvLK3D.CurrUniv["objects"][name]
+function LvLK3D.SetObjectScl(index, scl)
+	local obj = LvLK3D.CurrUniv["objects"][index]
 
 	obj.scl = scl or Vector(0, 0, 0)
 	obj.mat_scl:SetScale(scl)
@@ -143,21 +151,25 @@ function LvLK3D.SetObjectScl(name, scl)
 	recalculateObjectMatrices(obj)
 end
 
-function LvLK3D.SetObjectCol(name, col)
-	LvLK3D.CurrUniv["objects"][name].col = col and {col[1], col[2], col[3]} or {1, 1, 1}
+function LvLK3D.SetObjectCol(index, col)
+	LvLK3D.CurrUniv["objects"][index].col = col and {col[1], col[2], col[3]} or {1, 1, 1}
 end
 
-function LvLK3D.SetObjectMat(name, mat)
-	local obj = LvLK3D.CurrUniv["objects"][name]
+function LvLK3D.SetObjectMat(index, mat)
+	local obj = LvLK3D.CurrUniv["objects"][index]
 
 	obj.mat = mat or "none"
 	obj.mesh:setTexture(LvLK3D.Textures[obj.mat])
 end
 
-function LvLK3D.SetObjectFlag(name, flag, value)
-	LvLK3D.CurrUniv["objects"][name][flag] = value
+function LvLK3D.SetObjectFlag(index, flag, value)
+	LvLK3D.CurrUniv["objects"][index][flag] = value
 end
 
-function LvLK3D.UpdateObjectMesh(name)
-	initMesh(LvLK3D.CurrUniv["objects"][name])
+function LvLK3D.UpdateObjectMesh(index)
+	initMesh(LvLK3D.CurrUniv["objects"][index])
+end
+
+function LvLK3D.GetObjectByName(name)
+	return LvLK3D.CurrUniv["objectIDLUT"][name]
 end

@@ -263,6 +263,8 @@ local function traceObj(obj, ro, rd, minDist)
 	return traceObjC(obj, ro, rd, minDist)
 end
 
+local _MAX_ITR = 1024 * 2
+
 function LvLK3D.TraceRay(ro, rd, maxDist)
 	local min_dist = maxDist or math.huge
 	local ret_hit = false
@@ -270,12 +272,18 @@ function LvLK3D.TraceRay(ro, rd, maxDist)
 	local ret_norm = rd
 	local ret_obj = nil
 
-	for k, v in pairs(LvLK3D.CurrUniv["objects"]) do
-		if v["NO_TRACE"] then
+	for i = 1, _MAX_ITR do
+		local obj = LvLK3D.CurrUniv["objects"][i]
+
+		if not obj then
 			goto _contTraceScene
 		end
 
-		local hit, pos, dist, norm = traceObj(v, ro, rd, maxDist)
+		if obj["NO_TRACE"] then
+			goto _contTraceScene
+		end
+
+		local hit, pos, dist, norm = traceObj(obj, ro, rd, maxDist)
 		if hit and dist < min_dist then
 			ret_hit = true
 			ret_pos = pos
@@ -283,7 +291,7 @@ function LvLK3D.TraceRay(ro, rd, maxDist)
 			ret_norm = norm
 
 			min_dist = dist
-			ret_obj = v
+			ret_obj = obj
 		end
 
 

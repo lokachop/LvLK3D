@@ -200,8 +200,8 @@ end
 
 
 
-function LvLK3D.SetObjectShadow(name, shouldCast)
-	local obj = LvLK3D.CurrUniv["objects"][name]
+function LvLK3D.SetObjectShadow(index, shouldCast)
+	local obj = LvLK3D.CurrUniv["objects"][index]
 	obj.SHADOW_VOLUME = shouldCast
 
 	if shouldCast == true then
