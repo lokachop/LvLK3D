@@ -1,6 +1,8 @@
 LvLK3D = LvLK3D or {}
 local ode = require("moonode")
 
+local _MAX_PHYSICS_OBJECTS = LvLK3D.MAX_PHYSICS_OBJECTS * 1
+
 local _surfaceParams = ode.pack_surfaceparameters({
     mu = 50.0,
     slip1 = 0.2,
@@ -98,30 +100,13 @@ LvLK3D.NewSurfaceMaterial("wood_box", {
     },
 })
 
-LvLK3D.NewSurfaceMaterial("ice", {
-    ["sound_list"] = {
-        "sounds/physics/wood/wood_box1.wav",
-        "sounds/physics/wood/wood_box2.wav",
-        "sounds/physics/wood/wood_box3.wav",
-        "sounds/physics/wood/wood_box4.wav",
-        "sounds/physics/wood/wood_box5.wav",
-    },
-    ["ode_params"] = {
-        mu = 250.0,
-        slip1 = 1.1,
-        slip2 = 1.1,
-        soft_erp = 0.96,
-        soft_cfm = 0.04,
-        approx1 = true,
-    },
-})
-
 function LvLK3D.SetupPhysicsWorld(univ)
 
     univ.odePhys = {
         world = ode.create_world(),
         space = ode.create_hash_space(),
         objects = {},
+        objectIDLUT = {},
         body2objects = {}
     }
 
@@ -131,38 +116,31 @@ function LvLK3D.SetupPhysicsWorld(univ)
 end
 
 function LvLK3D.SetPhysicsGravity(grav)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-    univ.odePhys.world:set_gravity(grav)
+    LvLK3D.CurrUniv.odePhys.world:set_gravity(grav)
 end
 
 
 
 function LvLK3D.GetPhysicsObjectList()
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-    return univ.odePhys.objects
+    return LvLK3D.CurrUniv.odePhys.objects
 end
 
-function LvLK3D.GetPhysicsObject(name)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-    return univ.odePhys.objects[name]
+function LvLK3D.GetPhysicsObjectByIndex(index)
+    return LvLK3D.CurrUniv.odePhys.objects[index]
 end
 
+function LvLK3D.GetPhysicsObjectByName(name)
+    return LvLK3D.CurrUniv.odePhys.objectIDLUT[name]
+end
+
+function LvLK3D.CanCreatePhysicsObject()
+    return (#LvLK3D.CurrUniv.odePhys.objects + 1) <= _MAX_PHYSICS_OBJECTS
+end
 
 function LvLK3D.NewPhysicsBox(name, size)
     local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
+
+    if not LvLK3D.CanCreatePhysicsObject() then
         return
     end
 
@@ -174,7 +152,12 @@ function LvLK3D.NewPhysicsBox(name, size)
 
     univ.odePhys.space:add(box)
 
-    univ.odePhys.objects[name] = {
+    local objs = univ.odePhys.objects
+    local index = #objs + 1
+
+    univ.odePhys.objectIDLUT[name] = index
+    univ.odePhys.body2objects[body] = index
+    univ.odePhys.objects[index] = {
         otype = "box",
         body = body,
         size = size,
@@ -182,25 +165,32 @@ function LvLK3D.NewPhysicsBox(name, size)
         surftype = "metal",
     }
 
-    univ.odePhys.body2objects[body] = name
+    return index
 end
 
 
 function LvLK3D.NewPhysicsCapsule(name, radius, len)
     local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
+
+    if not LvLK3D.CanCreatePhysicsObject() then
         return
     end
 
-    local box = ode.create_capsule(nil, radius, len)
+    local capsule = ode.create_capsule(nil, radius, len)
     local body = ode.create_body(univ.odePhys.world)
 
     body:set_mass(ode.mass_capsule(1, "y", radius, len))
-    box:set_body(body)
+    capsule:set_body(body)
 
-    univ.odePhys.space:add(box)
+    univ.odePhys.space:add(capsule)
 
-    univ.odePhys.objects[name] = {
+
+    local objs = univ.odePhys.objects
+    local index = #objs + 1
+
+    univ.odePhys.objectIDLUT[name] = index
+    univ.odePhys.body2objects[body] = index
+    univ.odePhys.objects[index] = {
         otype = "capsule",
         body = body,
         radius = radius,
@@ -209,31 +199,20 @@ function LvLK3D.NewPhysicsCapsule(name, radius, len)
         surftype = "metal",
     }
 
-    univ.odePhys.body2objects[body] = name
+    return index
 end
 
 
-function LvLK3D.SetPhysicsObjectSurfaceMaterial(name, material)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
+function LvLK3D.SetPhysicsObjectSurfaceMaterial(index, material)
     if not surfParams[material] then
         return
     end
 
-    univ.odePhys.objects[name].surftype = material
+    LvLK3D.CurrUniv.odePhys.objects[index].surftype = material
 end
 
-function LvLK3D.GetPhysicsObjectSurfaceMaterial(name)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-
-    return univ.odePhys.objects[name].surftype
+function LvLK3D.GetPhysicsObjectSurfaceMaterial(index)
+    return LvLK3D.CurrUniv.odePhys.objects[index].surftype
 end
 
 local _massTypeSetters = {
@@ -246,13 +225,8 @@ local _massTypeSetters = {
 }
 
 
-function LvLK3D.SetPhysicsObjectMass(name, mass)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-    local obj = univ.odePhys.objects[name]
+function LvLK3D.SetPhysicsObjectMass(index, mass)
+    local obj = LvLK3D.CurrUniv.odePhys.objects[index]
 
     if _massTypeSetters[obj.otype] then
         _massTypeSetters[obj.otype](obj, mass)
@@ -261,21 +235,11 @@ function LvLK3D.SetPhysicsObjectMass(name, mass)
     end
 end
 
-function LvLK3D.SetPhysicsObjectPos(name, pos)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-    univ.odePhys.objects[name].body:set_position(pos)
+function LvLK3D.SetPhysicsObjectPos(index, pos)
+    LvLK3D.CurrUniv.odePhys.objects[index].body:set_position(pos)
 end
 
-function LvLK3D.SetPhysicsObjectAng(name, ang)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
+function LvLK3D.SetPhysicsObjectAng(index, ang)
     local mat_ang = Matrix()
     mat_ang:Identity()
     mat_ang:SetAngles(ang)
@@ -287,113 +251,68 @@ function LvLK3D.SetPhysicsObjectAng(name, ang)
         {mat_ang[ 8], mat_ang[10], mat_ang[11]}
     }
 
-    univ.odePhys.objects[name].body:set_rotation(mat3_ang)
+    LvLK3D.CurrUniv.odePhys.objects[index].body:set_rotation(mat3_ang)
 end
 
 
-function LvLK3D.SetPhysicsObjectMat(name, mat)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
+function LvLK3D.SetPhysicsObjectMat(index, mat)
     local mat3_ang = {
         {mat[ 1], mat[ 2], mat[ 3]},
         {mat[ 5], mat[ 6], mat[ 7]},
         {mat[ 8], mat[10], mat[11]}
     }
 
-    univ.odePhys.objects[name].body:set_rotation(mat3_ang)
+    LvLK3D.CurrUniv.odePhys.objects[index].body:set_rotation(mat3_ang)
 end
 
 
-function LvLK3D.SetPhysicsObjectPosAng(name, pos, ang)
-    LvLK3D.SetPhysicsObjectPos(name, pos)
-    LvLK3D.SetPhysicsObjectAng(name, ang)
+function LvLK3D.SetPhysicsObjectPosAng(index, pos, ang)
+    LvLK3D.SetPhysicsObjectPos(index, pos)
+    LvLK3D.SetPhysicsObjectAng(index, ang)
 end
 
-function LvLK3D.SetPhysicsObjectVel(name, vel)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-    univ.odePhys.objects[name].body:set_linear_vel(vel)
+function LvLK3D.SetPhysicsObjectVel(index, vel)
+    LvLK3D.CurrUniv.odePhys.objects[index].body:set_linear_vel(vel)
 end
 
-function LvLK3D.SetPhysicsObjectAngVel(name, angvel)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-    univ.odePhys.objects[name].body:set_angular_vel(angvel)
+function LvLK3D.SetPhysicsObjectAngVel(index, angvel)
+    LvLK3D.CurrUniv.odePhys.objects[index].body:set_angular_vel(angvel)
 end
 
-function LvLK3D.SetPhysicsObjectTorque(name, torque)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-    univ.odePhys.objects[name].body:set_torque(torque)
+function LvLK3D.SetPhysicsObjectTorque(index, torque)
+    LvLK3D.CurrUniv.odePhys.objects[index].body:set_torque(torque)
 end
 
 
-function LvLK3D.AddPhysicsObjectTorque(name, torque)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-    univ.odePhys.objects[name].body:add_torque(torque)
+function LvLK3D.AddPhysicsObjectTorque(index, torque)
+    LvLK3D.CurrUniv.odePhys.objects[index].body:add_torque(torque)
 end
 
 
-function LvLK3D.AddPhysicsObjectRelTorque(name, torque)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-    univ.odePhys.objects[name].body:add_rel_torque(torque)
+function LvLK3D.AddPhysicsObjectRelTorque(index, torque)
+    LvLK3D.CurrUniv.odePhys.objects[index].body:add_rel_torque(torque)
 end
 
 
 
-function LvLK3D.SetPhysicsObjectStatic(name, bool)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-    univ.odePhys.objects[name].body:set_kinematic(bool)
+function LvLK3D.SetPhysicsObjectStatic(index, bool)
+    LvLK3D.CurrUniv.odePhys.objects[index].body:set_kinematic(bool)
 end
 
 -- Linked objects
 -- these just update the transforms of nameVis to look as if they were in namePhys's location
 -- you can unlink them too
-function LvLK3D.SetLinkedObject(namePhys, indexVis)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-    univ.odePhys.objects[namePhys].linked = indexVis
-    LvLK3D.CurrUniv["objects"][indexVis]._linkedPhys = namePhys
+function LvLK3D.SetLinkedObject(indexPhys, indexVis)
+    LvLK3D.CurrUniv.odePhys.objects[indexPhys].linked = indexVis
+    LvLK3D.CurrUniv["objects"][indexVis]._linkedPhys = indexPhys
 end
 
 function LvLK3D.SetLinkedOffset(index, offset)
     LvLK3D.CurrUniv["objects"][index]._linkedOffset = offset or Vector(0, 0, 0)
 end
 
-function LvLK3D.SetPhysicsObjectOnMoveCallback(name, callback)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-    univ.odePhys.objects[name].body:set_moved_callback(callback)
+function LvLK3D.SetPhysicsObjectOnMoveCallback(index, callback)
+    LvLK3D.CurrUniv.odePhys.objects[index].body:set_moved_callback(callback)
 end
 
 
@@ -402,30 +321,18 @@ function LvLK3D.GetLinkedObjectPhys(indexVis)
     return LvLK3D.CurrUniv["objects"][indexVis]._linkedPhys
 end
 
-function LvLK3D.GetLinkedObjectVis(namePhys)
-    return LvLK3D.CurrUniv.odePhys.objects[namePhys].linked
+function LvLK3D.GetLinkedObjectVis(indexPhys)
+    return LvLK3D.CurrUniv.odePhys.objects[indexPhys].linked
 end
 
 
-function LvLK3D.GetPhysicsObjectPos(name)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-
-    local pos = univ.odePhys.objects[name].body:get_position()
+function LvLK3D.GetPhysicsObjectPos(index)
+    local pos = LvLK3D.CurrUniv.odePhys.objects[index].body:get_position()
     return Vector(pos[1], pos[2], pos[3])
 end
 
-function LvLK3D.GetPhysicsObjectAng(name)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-
-    local angMat = univ.odePhys.objects[name].body:get_rotation()
+function LvLK3D.GetPhysicsObjectAng(index)
+    local angMat = LvLK3D.CurrUniv.odePhys.objects[index].body:get_rotation()
     local matObj = Matrix(
         angMat[1][1], angMat[1][2], angMat[1][3], 0,
         angMat[2][1], angMat[2][2], angMat[2][3], 0,
@@ -436,14 +343,8 @@ function LvLK3D.GetPhysicsObjectAng(name)
     return matObj:GetAngles(), matObj
 end
 
-function LvLK3D.GetPhysicsObjectMat(name)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-
-    local angMat = univ.odePhys.objects[name].body:get_rotation()
+function LvLK3D.GetPhysicsObjectMat(index)
+    local angMat = LvLK3D.CurrUniv.odePhys.objects[index].body:get_rotation()
     local matObj = Matrix(
         angMat[1][1], angMat[1][2], angMat[1][3], 0,
         angMat[2][1], angMat[2][2], angMat[2][3], 0,
@@ -454,27 +355,22 @@ function LvLK3D.GetPhysicsObjectMat(name)
     return matObj
 end
 
-function LvLK3D.GetPhysicsObjectVel(name)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-
-    local vel = univ.odePhys.objects[name].body:get_linear_vel()
+function LvLK3D.GetPhysicsObjectVel(index)
+    local vel = LvLK3D.CurrUniv.odePhys.objects[index].body:get_linear_vel()
     return Vector(vel[1], vel[2], vel[3])
 end
 
 
-function LvLK3D.GetPhysicsObjectAngVel(name)
-    local univ = LvLK3D.CurrUniv
-    if not univ.odePhys then
-        return
-    end
-
-
-    local vel = univ.odePhys.objects[name].body:get_angular_vel()
+function LvLK3D.GetPhysicsObjectAngVel(index)
+    local vel = LvLK3D.CurrUniv.odePhys.objects[index].body:get_angular_vel()
     return Vector(vel[1], vel[2], vel[3])
+end
+
+function LvLK3D.RemovePhysicsObject(index)
+    local univ = LvLK3D.CurrUniv
+
+    univ.odePhys.objectIDLUT[univ.odePhys.objects[index].name] = nil
+    univ.odePhys.objects[index] = nil
 end
 
 
@@ -548,22 +444,31 @@ local function updateLinked()
         return
     end
 
-    for k, v in pairs(univ.odePhys.objects) do
-        local linkIdx = v.linked
+    for i = 1, _MAX_PHYSICS_OBJECTS do
+        local physObj = univ.odePhys.objects[i]
+
+        if not physObj then
+            goto _contLinked
+        end
+
+        local linkIdx = physObj.linked
         if linkIdx then
             local linkedObj = LvLK3D.CurrUniv["objects"][linkIdx]
 
             local linkOff = LvLK3D.CurrUniv["objects"][linkIdx]._linkedOffset or Vector(0, 0, 0)
-            local ang_phys, mat_phys = LvLK3D.GetPhysicsObjectAng(k)
+            local mat_phys = LvLK3D.GetPhysicsObjectMat(i)
             linkOff = linkOff * mat_phys
 
 
-            LvLK3D.SetObjectPos(linkIdx, LvLK3D.GetPhysicsObjectPos(k) + linkOff)
+            LvLK3D.SetObjectPos(linkIdx, LvLK3D.GetPhysicsObjectPos(i) + linkOff)
             --LvLK3D.SetObjectAng(linkIdx, ang_phys)
 
             linkedObj.mat_rot = mat_phys
             LvLK3D.__recalculateObjectMatrices(linkIdx)
         end
+
+
+        ::_contLinked::
     end
 end
 

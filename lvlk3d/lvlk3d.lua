@@ -15,6 +15,7 @@ LvLK3D.LoadFile("libs/lvec")
 LvLK3D.LoadFile("libs/lang")
 LvLK3D.LoadFile("libs/lknoise")
 
+LvLK3D.LoadFile("consts")
 LvLK3D.LoadFile("textures")
 LvLK3D.LoadFile("universes")
 LvLK3D.LoadFile("rendertargets")

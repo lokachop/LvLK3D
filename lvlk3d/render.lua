@@ -1,5 +1,7 @@
 LvLK3D = LvLK3D or {}
 -- TODO render meshes
+local _MAX_OBJECTS = LvLK3D.MAX_OBJECTS * 1
+
 
 local function renderObject(obj, shaderOverride)
     local shader = shaderOverride or LvLK3D.CurrShader
@@ -86,13 +88,11 @@ local shadowShaderSun = LvLK3D.GetShader("shadowvolumesun")
 local shadowShaderCapSun = LvLK3D.GetShader("shadowcapsun")
 
 
-local _MAX_ITR = 1024 * 2
-
 local function renderActiveUniverseLit()
     local worldParams = LvLK3D.CurrUniv["worldParameteri"]
 
     local _renderShadowed = {}
-    for i = 1, _MAX_ITR do
+    for i = 1, _MAX_OBJECTS do
         local obj = LvLK3D.CurrUniv["objects"][i]
 
         if obj and obj["FULLBRIGHT"] then
@@ -122,7 +122,7 @@ local function renderActiveUniverseLit()
         -- shadow volume cutouts done! render with lights...
         love.graphics.setDepthMode("lequal", true)
         love.graphics.setStencilTest("equal", 0)
-            for i = 1, _MAX_ITR do
+            for i = 1, _MAX_OBJECTS do
                 local obj2 = LvLK3D.CurrUniv["objects"][i]
 
                 if obj2 and obj2["FULLBRIGHT"] then
@@ -136,7 +136,7 @@ local function renderActiveUniverseLit()
             end
         love.graphics.setStencilTest()
     else
-        for i = 1, _MAX_ITR do
+        for i = 1, _MAX_OBJECTS do
             local obj3 = LvLK3D.CurrUniv["objects"][i]
 
             if obj3 and obj3["FULLBRIGHT"] then
@@ -156,13 +156,15 @@ local function renderActiveUniverseLit()
         -- shadow volume cutouts done! render with lights...
         love.graphics.setDepthMode("lequal", true)
         love.graphics.setStencilTest("equal", 0)
-            for k2, v2 in pairs(LvLK3D.CurrUniv["objects"]) do
-                if not v2["FULLBRIGHT"] then
-                    v2["LIT_LIGHT_POS"] = v.pos
-                    v2["LIT_LIGHT_COL"] = v.col
-                    v2["LIT_LIGHT_INT"] = v.intensity
+            for i = 1, _MAX_OBJECTS do
+                local obj4 = LvLK3D.CurrUniv["objects"][i]
 
-                    renderObject(v2, lightingShader)
+                if obj4 and not obj4["FULLBRIGHT"] then
+                    obj4["LIT_LIGHT_POS"] = v.pos
+                    obj4["LIT_LIGHT_COL"] = v.col
+                    obj4["LIT_LIGHT_INT"] = v.intensity
+
+                    renderObject(obj4, lightingShader)
                 end
             end
         love.graphics.setStencilTest()
@@ -187,7 +189,7 @@ end
 local function renderActiveUniverseNonLit()
     local _renderShadowed = {}
 
-    for i = 1, _MAX_ITR do
+    for i = 1, _MAX_OBJECTS do
         local obj = LvLK3D.CurrUniv["objects"][i]
 
         if obj then

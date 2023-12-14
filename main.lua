@@ -144,6 +144,13 @@ function love.load()
 
 
 
+
+
+
+
+
+
+
 		local idxCube = LvLK3D.AddObjectToUniv("cube1", "cube")
 		LvLK3D.SetObjectPos(idxCube, Vector(0, 0, 0))
 		LvLK3D.SetObjectMat(idxCube, "happyPNGTest")
@@ -263,8 +270,7 @@ function love.load()
 
 
 		local function physAndLinked(name, pos, ang, sz, static, mass)
-			local idxPhys = name .. "_phys"
-			LvLK3D.NewPhysicsBox(idxPhys, sz)
+			local idxPhys = LvLK3D.NewPhysicsBox(name .. "_phys", sz)
 			LvLK3D.SetPhysicsObjectMass(idxPhys, mass or 5120)
 			LvLK3D.SetPhysicsObjectPos(idxPhys, pos)
 			LvLK3D.SetPhysicsObjectAng(idxPhys, ang)
@@ -304,11 +310,11 @@ function love.load()
 
 		--physAndLinked("bigFloorA", Vector(0, -8, 0), Angle(0, 0, 0), Vector(32, 4, 32), true)
 
-		LvLK3D.NewPhysicsBox("bigFloorA", Vector(512, 4, 512))
-		LvLK3D.SetPhysicsObjectMass("bigFloorA", 5120)
-		LvLK3D.SetPhysicsObjectPos("bigFloorA", Vector(0, -8, 0))
-		LvLK3D.SetPhysicsObjectAng("bigFloorA", Angle(0, 0, 0))
-		LvLK3D.SetPhysicsObjectStatic("bigFloorA", true)
+		local bigFloor = LvLK3D.NewPhysicsBox("bigFloorA", Vector(512, 4, 512))
+		LvLK3D.SetPhysicsObjectMass(bigFloor, 5120)
+		LvLK3D.SetPhysicsObjectPos(bigFloor, Vector(0, -8, 0))
+		LvLK3D.SetPhysicsObjectAng(bigFloor, Angle(0, 0, 0))
+		LvLK3D.SetPhysicsObjectStatic(bigFloor, true)
 
 
 
@@ -444,18 +450,17 @@ local function throwCubes(dt)
 		local fow = LvLK3D.CamMatrix_Rot:Forward()
 
 
-		local idx = "throw" .. _throwIdx
-		LvLK3D.NewPhysicsBox(idx, Vector(.4, .4, .4))
-		LvLK3D.SetPhysicsObjectMass(idx, 2) -- 20 kg
-		LvLK3D.SetPhysicsObjectPos(idx, LvLK3D.CamPos + (fow * 1.5))
-		LvLK3D.SetPhysicsObjectVel(idx, fow * 16)
-		LvLK3D.SetPhysicsObjectSurfaceMaterial(idx, "wood_box")
+		local idxPhys = LvLK3D.NewPhysicsBox("throw" .. _throwIdx, Vector(.4, .4, .4))
+		LvLK3D.SetPhysicsObjectMass(idxPhys, 2) -- 20 kg
+		LvLK3D.SetPhysicsObjectPos(idxPhys, LvLK3D.CamPos + (fow * 1.5))
+		LvLK3D.SetPhysicsObjectVel(idxPhys, fow * 16)
+		LvLK3D.SetPhysicsObjectSurfaceMaterial(idxPhys, "wood_box")
 
 		if not _radio then
 			_radio = LvLK3D.PlaySound3D("sounds/Simplex.wav", Vector(0, 0, -16), 1, 3)
 			_radio:setLooping(true)
 			_radio:play()
-			LvLK3D.SetPhysicsObjectOnMoveCallback(idx, function(obj)
+			LvLK3D.SetPhysicsObjectOnMoveCallback(idxPhys, function(obj)
 				local pos = obj:get_position()
 				local vel = obj:get_linear_vel()
 
@@ -472,10 +477,10 @@ local function throwCubes(dt)
 		LvLK3D.SetObjectFlag(idxVis, "SHADING_SMOOTH", false)
 		LvLK3D.SetObjectFlag(idxVis, "FULLBRIGHT", false)
 		LvLK3D.UpdateObjectMesh(idxVis)
-		LvLK3D.SetObjectShadow(idxVis, false)
+		LvLK3D.SetObjectShadow(idxVis, true)
 
 
-		LvLK3D.SetLinkedObject(idx, idxVis)
+		LvLK3D.SetLinkedObject(idxPhys, idxVis)
 		LvLK3D.SetLinkedOffset(idxVis, Vector(0, -.4, -.075))
 
 

@@ -173,3 +173,10 @@ end
 function LvLK3D.GetObjectByName(name)
 	return LvLK3D.CurrUniv["objectIDLUT"][name]
 end
+
+
+
+function LvLK3D.RemoveObjectFromUniv(index)
+	LvLK3D.CurrUniv["objectIDLUT"][LvLK3D.CurrUniv["objects"][index].name] = nil
+	LvLK3D.CurrUniv["objects"][index] = nil
+end
