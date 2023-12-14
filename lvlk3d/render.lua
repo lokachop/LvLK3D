@@ -203,14 +203,10 @@ end
 
 
 function LvLK3D.RenderActiveUniverse()
-    love.graphics.setCanvas({LvLK3D.CurrRT, depth = true, stencil = true})
-
-
-        if (LvLK3D.CurrUniv["lightCount"] > 0) or (LvLK3D.CurrUniv["worldParameteri"].doSunLighting == true) then
-            renderActiveUniverseLit()
-        else
-            renderActiveUniverseNonLit()
-        end
-    love.graphics.setCanvas()
+    if (LvLK3D.CurrUniv["lightCount"] > 0) or (LvLK3D.CurrUniv["worldParameteri"].doSunLighting == true) then
+        renderActiveUniverseLit()
+    else
+        renderActiveUniverseNonLit()
+    end
 end
 

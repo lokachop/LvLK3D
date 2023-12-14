@@ -39,6 +39,10 @@ function love.load()
 
 	LvLK3D.NewTexturePNG("happyPNGTest", "textures/happy.png")
 
+	LvLK3D.NewTexturePNG("sky",       "textures/sky_composite.png")
+	LvLK3D.SetTextureWrap("sky", "repeat")
+
+
 	-- lets make some real textures
 	local procMarble = LvLK3D.ProcTexNewTemp(256, 256)
 	LvLK3D.ProcTexApplyColour(procMarble, 1, 1, 1)
@@ -130,17 +134,17 @@ function love.load()
 
 
 	LvLK3D.PushUniverse(UnivTest)
-		LvLK3D.SetSunLighting(false) -- dont do sun lighting
-		LvLK3D.SetSunCol({0.5, 0.5, 0.5}) -- set col to weird yellow
-		LvLK3D.SetSunDir(Vector(0.25, -1, -0.5):GetNormalized())
+		LvLK3D.SetSunLighting(true) -- dont do sun lighting
+		LvLK3D.SetSunCol({0.5, 0.5, 0.65}) -- set col to weird yellow
+		LvLK3D.SetSunDir(Vector(-0.61, -0.51, 0.59):GetNormalized())
 		LvLK3D.SetAmbientCol({.1, .1, .1}) -- ambient to darker weird yellow
 		--LvLK3D.SetAmbientCol({0, 0, 0})
 
 
 
-		LvLK3D.AddLightToUniv("LightOne", Vector(0, 3, 2), 4, {0.25, 0.25, 1})
-		LvLK3D.AddLightToUniv("LightTwo", Vector(2, 3, -2), 4, {0.25, 1, 0.25})
-		LvLK3D.AddLightToUniv("LightThree", Vector(-2, 3, -2), 4, {1, 0.25, 0.25})
+		--LvLK3D.AddLightToUniv("LightOne", Vector(0, 3, 2), 4, {0.25, 0.25, 1})
+		--LvLK3D.AddLightToUniv("LightTwo", Vector(2, 3, -2), 4, {0.25, 1, 0.25})
+		--LvLK3D.AddLightToUniv("LightThree", Vector(-2, 3, -2), 4, {1, 0.25, 0.25})
 
 
 
@@ -426,6 +430,17 @@ function love.load()
 	})
 	source4:setLooping(true)
 	source4:play()
+
+
+	SkyUniv = LvLK3D.NewUniverse("skybox_test")
+	LvLK3D.PushUniverse(SkyUniv)
+		local skyCube = LvLK3D.AddObjectToUniv("skybox_cube", "sky_cube")
+		LvLK3D.SetObjectPos(skyCube, Vector(0, 0, 0))
+		LvLK3D.SetObjectScl(skyCube, Vector(1, 1, 1))
+		LvLK3D.SetObjectMat(skyCube, "sky")
+		LvLK3D.SetObjectFlag(skyCube, "NORM_INVERT", false)
+		LvLK3D.UpdateObjectMesh(skyCube)
+	LvLK3D.PopUniverse()
 end
 
 
@@ -583,6 +598,9 @@ function love.update(dt)
 		--LvLK3D.PhysicsDebugRender()
 		LvLK3D.SoundThink(dt)
 	LvLK3D.PopUniverse()
+
+
+	--print("Vector(" .. dir[1] .. ", " .. dir[2] .. ", " .. dir[3] .. ")")
 end
 
 function love.keypressed(key)
@@ -595,16 +613,27 @@ end
 
 
 function love.draw()
-	love.graphics.clear()
+	love.graphics.clear(true, true, true)
 
-	LvLK3D.PushUniverse(UnivTest)
 	LvLK3D.PushRenderTarget(RTTest)
-		LvLK3D.Clear(.1, .2, .3)
+		--LvLK3D.Clear(.1, .2, .3)
+		LvLK3D.ClearDepth()
 
-		LvLK3D.RenderActiveUniverse()
+		LvLK3D.PushUniverse(SkyUniv)
+			local _camPos = LvLK3D.CamPos * 1
+			LvLK3D.SetCamPos(Vector(0, 0, 0))
+			LvLK3D.RenderActiveUniverse()
+			LvLK3D.SetCamPos(_camPos)
 
+			LvLK3D.ClearDepth()
+		LvLK3D.PopUniverse()
+
+		LvLK3D.PushUniverse(UnivTest)
+
+			LvLK3D.RenderActiveUniverse()
+
+		LvLK3D.PopUniverse()
 	LvLK3D.PopRenderTarget()
-	LvLK3D.PopUniverse()
 
 	--LvLK3D.PushPPEffect("cbBlur", {
 	--	["blendFactor"] = 0.9

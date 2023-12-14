@@ -17,6 +17,8 @@ LvLK3D.LoadModelFromOBJ("train", "models/train/train.obj")
 LvLK3D.LoadModelFromOBJ("train_lod1", "models/train/train_lod1.obj")
 LvLK3D.LoadModelFromOBJ("train_lod2", "models/train/train_lod2.obj")
 
+LvLK3D.LoadModelFromOBJ("sky_cube", "models/sky.obj")
+
 
 --LvLK3D.LoadModelFromOBJ("human", "models/cubenuv.obj") -- temp no-error preload
 --LvLK3D.LoadModelFromCollada("human", "models/human.dae")
